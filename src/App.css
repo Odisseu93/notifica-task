@@ -1,0 +1,11 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+
+.app {
+  @apply w-screen h-screen p-[1.5rem];
+}
+
+.app>.title {
+  @apply text-gray-700 w-full text-3xl uppercase text-center;
+}
