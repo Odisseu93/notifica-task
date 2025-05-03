@@ -1,30 +1,45 @@
-# React + TypeScript + Vite
+# 📝 Notifica Task
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+**Notifica Task** is a lightweight desktop app that combines the power of quick note-taking with time awareness and task scheduling. Inspired by Windows Sticky Notes, each note opens in its own independent window — with persistent positioning, resizing, and state.
 
-Currently, two official plugins are available:
+## 🚀 Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- 🗒️ Create, edit, and delete sticky notes
+- 🕒 Each note remembers its window size and position
+- 🧠 Persistent state: reopen and pick up where you left off
+- 🪟 Multi-window: each note is a separate floating window
+- 🔁 Real-time updates between open windows
+- 🔔 Designed for notifications and task reminders _(future feature)_
 
-## Expanding the ESLint configuration
+## 🧩 Tech Stack
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+- **Electron** — multi-window desktop architecture
+- **React + Vite** — fast, modern UI development
+- **TypeScript** — type-safe codebase
+- **electron-store** — local storage for note state
 
-- Configure the top-level `parserOptions` property like this:
+## 🖼 App Preview
 
-```js
-export default {
-  // other rules...
-  parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-  },
-}
+<img src="preview.png" alt="Notifica Task UI Preview" width="500"/>
+
+## 📦 Installation
+
+```bash
+# Clone the repo
+git clone https://github.com/your-username/notifica-task.git
+cd notifica-task
+
+# Install dependencies
+npm install
+
+# Start in development
+npm run dev
+
 ```
 
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+## 📦 Download
+
+You can download the latest version of Notifica Task for your platform:
+| Platform | Installer |
+| ---------- | ---------------------------------------------------------------------------------- |
+| 🪟 Windows | [Download `.exe`](/download/notifica-task-windows-0.1.0-setup.exe) |
