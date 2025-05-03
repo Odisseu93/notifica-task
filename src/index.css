@@ -1,6 +1,7 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap');
+@import "./styles/variables.css";
 
 
 .font-bebas-neue-regular {
@@ -34,6 +35,7 @@
   font-style: normal;
   font-size: 1rem;
   line-height: 1.25rem;
+  overflow: hidden;
 
   @apply text-gray-700 text-base;
 }

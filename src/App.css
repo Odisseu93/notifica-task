@@ -1,11 +1,52 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
-
-.app {
-  @apply w-screen h-screen p-[1.5rem];
+.card {
+  background-color: var(--color-card-bg);
+  @apply overflow-auto;
 }
 
-.app>.title {
-  @apply text-gray-700 w-full text-3xl uppercase text-center;
+.card>header {
+  background-color: var(--color-black-1);
+  @apply h-[32px] w-full flex justify-between items-center p-2;
+  -webkit-app-region: drag;
+}
+
+button {
+  -webkit-app-region: none;
+}
+
+.card>header>.close-and-elpse-button {
+  @apply flex gap-4;
+}
+
+.menu {
+  @apply bg-white flex flex-col gap-4 items-center absolute right-[3px] top-8 px-2 py-4 rounded-b-lg;
+}
+
+.menu>li>button {
+  @apply flex gap-1 justify-center;
+}
+
+
+.menu>li>.credits {
+  @apply flex gap-1 flex-col items-center text-sm;
+}
+
+.menu>li>.credits>p>a {
+  @apply text-blue-700;
+}
+
+.menu--disabled {
+  transform: translate(0, -100vh);
+  @apply overflow-hidden ease-in -z-10;
+}
+
+.menu--disabled {
+  transform: translate(0);
+  @apply duration-500 ease-in;
+}
+
+.card>textarea {
+  @apply resize-none w-full h-screen border-0 outline-none p-3 overflow-auto;
 }
