@@ -5,11 +5,7 @@
 ## 🚀 Features
 
 - 🗒️ Create, edit, and delete sticky notes
-- 🕒 Each note remembers its window size and position
-- 🧠 Persistent state: reopen and pick up where you left off
-- 🪟 Multi-window: each note is a separate floating window
-- 🔁 Real-time updates between open windows
-- 🔔 Designed for notifications and task reminders _(future feature)_
+- 🔔 add reminders with alarmsDesigned for notifications and task reminders
 
 ## 🧩 Tech Stack
 
