@@ -16,7 +16,8 @@
 
 ## 🖼 App Preview
 
-<img src="preview.png" alt="Notifica Task UI Preview" width="500"/>
+
+![image](https://github.com/user-attachments/assets/a42da474-7ddc-42b9-93ba-fee8a109941a)
 
 ## 📦 Installation
 
@@ -38,4 +39,5 @@ npm run dev
 You can download the latest version of Notifica Task for your platform:
 | Platform | Installer |
 | ---------- | ---------------------------------------------------------------------------------- |
-| 🪟 Windows | [Download `.exe`](/download/notifica-task-windows-0.1.0-setup.exe) |
+| 🪟 Windows | <a download="" href="https://github.com/Odisseu93/notifica-task/raw/refs/heads/main/download/Notifica%20Task-Windows-1.0.0-Setup.exe">Download</a> |
+
