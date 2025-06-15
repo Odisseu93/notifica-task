@@ -1,0 +1,29 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+.container {
+  @apply flex flex-col gap-4 px-4 py-16;
+}
+
+.container>header {
+  background-color: var(--color-black-1);
+  @apply absolute left-0 top-0 h-[32px] w-full flex justify-end items-center p-2;
+  -webkit-app-region: drag;
+}
+
+button {
+  -webkit-app-region: none;
+}
+
+.start-up-with-system-container {
+  @apply flex items-center gap-2;
+}
+
+.start-up-with-system-container>input {
+  @apply w-4 h-4 border border-gray-300 rounded-sm focus:ring-0 focus:ring-offset-0;
+}
+
+.about-button,
+.quite-button {
+  @apply bg-transparent w-max m-0 p-0 border-none active:scale-95;
+}
