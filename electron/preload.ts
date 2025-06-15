@@ -1,5 +1,7 @@
 import { ipcRenderer, contextBridge } from 'electron'
-import { Note } from '../interfaces/note-interfaces'
+import { Note } from '../interfaces/note-interface'
+import { NoteNotification } from '../interfaces/note-notification-interface'
+import { AlarmSoundKeyType } from '@/libs/app-notification'
 
 // --------- Expose some API to the Renderer process ---------
 contextBridge.exposeInMainWorld('ipcRenderer', {
@@ -55,5 +57,49 @@ contextBridge.exposeInMainWorld('electron', {
 		return () => ipcRenderer.removeListener('note-deleted', listener)
 	},
 
-	getAppVersion: () => ipcRenderer.invoke('get-app-version'),
+	getNotificationSchedule: (noteId: string) => ipcRenderer.invoke('get-notification-schedule', noteId),
+
+	updateNoteNotification: (notificaition: NoteNotification) => {
+		ipcRenderer.send('set-note-notification', notificaition)
+	},
+
+	deleteNoteNotification: (noteId: string) => {
+		ipcRenderer.send('delete-note-notification', noteId)
+	},
+
+	onNoteNotificationUpdated: (callback: (notification: NoteNotification) => void) => {
+		const listener = (_: unknown, notification: NoteNotification) => callback(notification)
+		ipcRenderer.on('note-notification-updated', listener)
+		return () => ipcRenderer.removeListener('note-updated', listener)
+	},
+
+	onNoteNotificationDeleted: (callback: (noteId: string) => void) => {
+		const listener = (_: unknown, noteId: string) => callback(noteId)
+		ipcRenderer.on('note-notification-deleted', listener)
+		return () => ipcRenderer.removeListener('note-deleted', listener)
+	},
+
+	closeAllNotes: () => ipcRenderer.invoke('close-all-notes'),
+
+	openAllNotes: () => ipcRenderer.invoke('open-all-notes'),
+
+	deleteAllNotes: () => ipcRenderer.invoke('delete-all-notes'),
+
+	hideMainWindow: () => ipcRenderer.invoke('hide-main-window'),
+
+	openAboutWindow: () => ipcRenderer.invoke('open-about-window'),
+
+	closeApp: () => ipcRenderer.invoke('close-app'),
+
+	setNotificationSound: (sound: AlarmSoundKeyType) => ipcRenderer.send('change-notification-sound', sound),
+
+	getNotificationSound: () => ipcRenderer.invoke('get-notification-sound'),
+
+	getAboutInfo: () => ipcRenderer.invoke('get-about-info'),
+
+	closeAboutWindow: () => ipcRenderer.invoke('close-about-window'),
+
+	getAutoStart: () => ipcRenderer.invoke('get-auto-launch'),
+
+	setAutoStart: (enabled: boolean) => ipcRenderer.invoke('set-auto-launch', enabled),
 })

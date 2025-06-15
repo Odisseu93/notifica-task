@@ -1,0 +1,39 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+
+.label {
+  @apply font-bold;
+}
+
+.selected {
+  @apply bg-white flex justify-between w-[185px] px-4 py-2 border border-black rounded-md;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  z-index: 2 !important;
+}
+
+.list {
+  @apply bg-white;
+  margin: 0;
+}
+
+.list--folded {
+  height: 0;
+  width: 0;
+  overflow: hidden;
+}
+
+.list--unfolded {
+  @apply absolute w-[185px] mt-[-5px] px-4 py-2 border border-t-0 border-black rounded-b-md;
+  z-index: 1;
+}
+
+.item {
+  @apply cursor-default;
+}
+
+.item:hover {
+  @apply font-bold;
+}
