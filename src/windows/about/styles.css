@@ -1,0 +1,27 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+.about-container {
+  @apply flex flex-col p-4 gap-2;
+
+}
+
+.about-container>header {
+  background-color: var(--color-black-1);
+  @apply absolute left-0 top-0 h-[32px] w-full flex justify-end items-center p-2;
+  -webkit-app-region: drag;
+}
+
+button {
+  -webkit-app-region: none;
+}
+
+.top-bar {}
+
+.app-name {
+  @apply text-2xl font-bold m-0 p-0 mt-4;
+}
+
+.info {
+  @apply flex flex-col gap-2;
+}
