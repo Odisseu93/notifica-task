@@ -1,8 +1,9 @@
 import './App.css'
-import NoteWindow from './windows/note'
+
+import RouteList from './RouteList'
 
 function App() {
-	return <NoteWindow />
+	return <RouteList />
 }
 
 export default App
