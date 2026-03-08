@@ -26,7 +26,7 @@ const CustomSelect = ({ label, defaultValue, list, onChange }: CustomSelectProps
 	return (
 		<div className='content'>
 			<p className='label'>{label}</p>
-			<button type='button' className='selected' onClick={handleToggleSelect}>
+			<button type='button' className='selected' onClick={handleToggleSelect} aria-label={label} aria-expanded={isUnfolded}>
 				<span>{selected ?? ''}</span>
 				<ChevronDown className={`${isUnfolded ? 'rotate-180' : ''} transition`} />
 			</button>

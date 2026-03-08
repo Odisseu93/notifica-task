@@ -12,7 +12,7 @@ describe('NoteWindow', () => {
 
 	it('shows loading state when note is not yet loaded', () => {
 		render(<NoteWindow />)
-		expect(screen.getByText(/Carregando nota/i)).toBeInTheDocument()
+		expect(screen.getByText(/Loading note/i)).toBeInTheDocument()
 	})
 
 	it('after getInitialState resolves with a note, renders note content', async () => {

@@ -97,7 +97,7 @@ const MainWindow = () => {
 	return (
 		<main className='container'>
 			<header className='header'>
-				<button type='button' title='close' onClick={api.hideMainWindow}>
+				<button type='button' title='close' aria-label='Close main window' onClick={api.hideMainWindow}>
 					<X color='#FFFFFF' />
 				</button>
 			</header>

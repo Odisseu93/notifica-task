@@ -72,6 +72,7 @@ const NotificationSchedule = ({ noteId }: { noteId: string }) => {
 		<>
 			<select
 				title='recurrence'
+				aria-label='Recurrence'
 				className='recurrence-select'
 				value={noteNotification?.recurrence ?? ''}
 				onInput={handleUpdateRecurrence}
@@ -85,6 +86,7 @@ const NotificationSchedule = ({ noteId }: { noteId: string }) => {
 			<input
 				placeholder='date'
 				type='datetime-local'
+				aria-label='Schedule date and time'
 				value={noteNotification.scheduleDate ? formatDateTimeLocal(noteNotification.scheduleDate) : ''}
 				onChange={handleUpdateScheduleDate}
 			/>

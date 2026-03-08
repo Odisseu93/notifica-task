@@ -81,27 +81,27 @@ const NoteWindow = () => {
 		}
 	}, [])
 
-	if (!note) return <div>Carregando nota...</div>
+	if (!note) return <div>Loading note...</div>
 
 	return (
 		<article className='card' id={note.id}>
 			<header>
-				<button type='button' title='add note' onClick={handleCreate}>
+				<button type='button' title='add note' aria-label='Add new note' onClick={handleCreate}>
 					<Plus color='#FFFFFF' />
 				</button>
 				<div className='close-and-elpse-button'>
-					<button type='button' title='menu' onClick={handleToggleMenu}>
+					<button type='button' title='menu' aria-label='Open menu' onClick={handleToggleMenu}>
 						<Ellipsis color='#FFFFFF' />
 					</button>
 					<ul className={`menu menu--${isMenuEnabled ? 'enabled' : 'disabled'}`}>
 						<li>
-							<button title='delete' type='button' className='text-[tomato]' onClick={handleDelete}>
+							<button title='delete' type='button' className='text-[tomato]' aria-label='Delete note' onClick={handleDelete}>
 								<Trash2 color='#141414' />
 								<span className='button-text'>Delete note</span>
 							</button>
 						</li>
 					</ul>
-					<button type='button' title='close' onClick={handleClose}>
+					<button type='button' title='close' aria-label='Close note window' onClick={handleClose}>
 						<X color='#FFFFFF' />
 					</button>
 				</div>

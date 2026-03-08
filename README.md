@@ -5,7 +5,7 @@
 ## 🚀 Features
 
 - 🗒️ Create, edit, and delete sticky notes
-- 🔔 add reminders with alarmsDesigned for notifications and task reminders
+- 🔔 Add reminders with alarms. Designed for notifications and task reminders
 
 ## 🧩 Tech Stack
 
