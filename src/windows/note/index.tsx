@@ -13,7 +13,7 @@ const NoteWindow = () => {
 	const [isMenuEnabled, setIsMenuEnabled] = useState(false)
 	const hash = window.location.hash // "#note?noteId=123"
 	const [, queryString] = hash.substring(1).split('?')
-	const noteId = new URLSearchParams(queryString).get('noteId')
+	const noteId = new URLSearchParams(queryString ?? '').get('noteId')
 
 	const handleContentChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
 		if (!note) return
@@ -36,7 +36,7 @@ const NoteWindow = () => {
 		api.createNewNote()
 	}
 
-	const hadleToggleMenu = () => {
+	const handleToggleMenu = () => {
 		setIsMenuEnabled(!isMenuEnabled)
 	}
 
@@ -87,7 +87,7 @@ const NoteWindow = () => {
 					<Plus color='#FFFFFF' />
 				</button>
 				<div className='close-and-elpse-button'>
-					<button type='button' title='menu' onClick={hadleToggleMenu}>
+					<button type='button' title='menu' onClick={handleToggleMenu}>
 						<Ellipsis color='#FFFFFF' />
 					</button>
 					<ul className={`menu menu--${isMenuEnabled ? 'enabled' : 'disabled'}`}>
