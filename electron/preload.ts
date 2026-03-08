@@ -21,7 +21,7 @@ contextBridge.exposeInMainWorld('ipcRenderer', {
 		const [channel, ...omit] = args
 		return ipcRenderer.invoke(channel, ...omit)
 	},
-	// You can expose other APTs you need here.
+	// You can expose other APIs you need here.
 	// ...
 })
 
@@ -59,8 +59,8 @@ contextBridge.exposeInMainWorld('electron', {
 
 	getNotificationSchedule: (noteId: string) => ipcRenderer.invoke('get-notification-schedule', noteId),
 
-	updateNoteNotification: (notificaition: NoteNotification) => {
-		ipcRenderer.send('set-note-notification', notificaition)
+	updateNoteNotification: (notification: NoteNotification) => {
+		ipcRenderer.send('set-note-notification', notification)
 	},
 
 	deleteNoteNotification: (noteId: string) => {
@@ -70,13 +70,13 @@ contextBridge.exposeInMainWorld('electron', {
 	onNoteNotificationUpdated: (callback: (notification: NoteNotification) => void) => {
 		const listener = (_: unknown, notification: NoteNotification) => callback(notification)
 		ipcRenderer.on('note-notification-updated', listener)
-		return () => ipcRenderer.removeListener('note-updated', listener)
+		return () => ipcRenderer.removeListener('note-notification-updated', listener)
 	},
 
 	onNoteNotificationDeleted: (callback: (noteId: string) => void) => {
 		const listener = (_: unknown, noteId: string) => callback(noteId)
 		ipcRenderer.on('note-notification-deleted', listener)
-		return () => ipcRenderer.removeListener('note-deleted', listener)
+		return () => ipcRenderer.removeListener('note-notification-deleted', listener)
 	},
 
 	closeAllNotes: () => ipcRenderer.invoke('close-all-notes'),
