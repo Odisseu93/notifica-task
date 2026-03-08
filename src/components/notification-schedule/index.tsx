@@ -35,18 +35,21 @@ const NotificationSchedule = ({ noteId }: { noteId: string }) => {
 	}
 
 	useLayoutEffect(() => {
-		api.getNotificationSchedule(noteId).then((nf) => {
-			const scheduled = noteNotification?.scheduleDate
-				? new Date(noteNotification.scheduleDate).toISOString()
-				: null
+		api
+			.getNotificationSchedule(noteId)
+			.then((nf) => {
+				const scheduled = noteNotification?.scheduleDate
+					? new Date(noteNotification.scheduleDate).toISOString()
+					: null
 
-			if (scheduled && now() >= scheduled) {
-				noteId && api.deleteNoteNotification(noteId)
-				setNoteNotification(noteNotificationInitialState)
-			} else {
-				setNoteNotification(nf ?? noteNotificationInitialState)
-			}
-		})
+				if (scheduled && now() >= scheduled) {
+					noteId && api.deleteNoteNotification(noteId)
+					setNoteNotification(noteNotificationInitialState)
+				} else {
+					setNoteNotification(nf ?? noteNotificationInitialState)
+				}
+			})
+			.catch((err) => console.error('[NotificationSchedule] getNotificationSchedule failed:', err))
 
 		const unsubscribeUpdated = api.onNoteNotificationUpdated((nf) => {
 			if (noteId === nf.noteId) {

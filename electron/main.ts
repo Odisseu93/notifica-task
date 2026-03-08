@@ -35,11 +35,19 @@ let notificationScheduleJob: schedule.Job | null = null
 const preload = path.join(__dirname, 'preload.mjs')
 
 const saveNotes = () => {
-	store.set('notes', notesState)
+	try {
+		store.set('notes', notesState)
+	} catch (err) {
+		console.error('[main] saveNotes failed:', err)
+	}
 }
 
 const saveNotesNotification = () => {
-	store.set('notesNotification', notesNotificationState)
+	try {
+		store.set('notesNotification', notesNotificationState)
+	} catch (err) {
+		console.error('[main] saveNotesNotification failed:', err)
+	}
 }
 
 const createMainWindow = () => {
@@ -168,11 +176,21 @@ const createNoteWindow = (note: Note) => {
 }
 
 ipcMain.handle('get-notification-schedule', (_, noteId): NoteNotification | undefined => {
-	return notesNotificationState?.[noteId]
+	try {
+		return notesNotificationState?.[noteId]
+	} catch (err) {
+		console.error('[main] get-notification-schedule failed:', err)
+		return undefined
+	}
 })
 
 ipcMain.handle('get-initial-state', (_, noteId): Note | undefined => {
-	return notesState[noteId]
+	try {
+		return notesState[noteId]
+	} catch (err) {
+		console.error('[main] get-initial-state failed:', err)
+		return undefined
+	}
 })
 
 // IPC: update note
@@ -188,16 +206,21 @@ ipcMain.on('update-note', (_, updatedNote: Note) => {
 
 // IPC: create a new note
 ipcMain.on('create-new-note', () => {
-	const newNote: Note = {
-		id: Date.now().toString(),
-		content: '',
-		y: 100,
-		x: 100,
-	}
+	try {
+		const newNote: Note = {
+			id: Date.now().toString(),
+			content: '',
+			y: 100,
+			x: 100,
+		}
 
-	notesState[newNote.id] = newNote
-	saveNotes()
-	createNoteWindow(newNote)
+		notesState[newNote.id] = newNote
+		saveNotes()
+		createNoteWindow(newNote)
+	} catch (err) {
+		console.error('[main] create-new-note failed:', err)
+		new Notification({ title: 'Error', body: 'Could not create note.' }).show()
+	}
 })
 
 // IPC: remove note
@@ -292,7 +315,13 @@ ipcMain.handle('open-all-notes', () => {
 		.forEach((note) => createNoteWindow(note))
 })
 
-ipcMain.handle('open-about-window', createAboutWindow)
+ipcMain.handle('open-about-window', () => {
+	try {
+		createAboutWindow()
+	} catch (err) {
+		console.error('[main] open-about-window failed:', err)
+	}
+})
 
 ipcMain.handle('close-about-window', () => {
 	if (aboutWindow && !aboutWindow.isDestroyed()) {
@@ -310,7 +339,12 @@ ipcMain.on('change-notification-sound', (_, sound: AlarmSoundKeyType) => {
 })
 
 ipcMain.handle('get-notification-sound', () => {
-	return store.get('notificationSound')
+	try {
+		return store.get('notificationSound')
+	} catch (err) {
+		console.error('[main] get-notification-sound failed:', err)
+		return undefined
+	}
 })
 
 ipcMain.handle('get-about-info', () => {
@@ -345,16 +379,26 @@ const isAutoLaunchEnabled = () => {
 }
 
 ipcMain.handle('get-auto-launch', () => {
-	return isAutoLaunchEnabled()
+	try {
+		return isAutoLaunchEnabled()
+	} catch (err) {
+		console.error('[main] get-auto-launch failed:', err)
+		return false
+	}
 })
 
 ipcMain.handle('set-auto-launch', (_, enable) => {
-	if (enable) {
-		enableAutoLaunch()
-	} else {
-		disableAutoLaunch()
+	try {
+		if (enable) {
+			enableAutoLaunch()
+		} else {
+			disableAutoLaunch()
+		}
+		return true
+	} catch (err) {
+		console.error('[main] set-auto-launch failed:', err)
+		return false
 	}
-	return true
 })
 
 app.whenReady().then(async () => {

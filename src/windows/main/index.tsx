@@ -16,14 +16,19 @@ const MainWindow = () => {
 
 	const handleToggleAutoStart = async () => {
 		const newValue = !autoStart
-		await api.setAutoStart(newValue)
-		setAutoStart(newValue)
+		try {
+			await api.setAutoStart(newValue)
+			setAutoStart(newValue)
+		} catch (err) {
+			console.error('[MainWindow] setAutoStart failed:', err)
+		}
 	}
 
 	useEffect(() => {
 		api
 			.getNotificationSound()
 			.then((key) => setDefaultSoundValue(soundList.find((sound) => sound.key === key)?.value || ''))
+			.catch((err) => console.error('[MainWindow] getNotificationSound failed:', err))
 
 		const handleCheckNotificationSchedule = (scheduleNotifications: Record<string, NoteNotification> | undefined) => {
 			if (scheduleNotifications) {
@@ -82,7 +87,7 @@ const MainWindow = () => {
 
 		const unsubscribeCheckSchedule = api.onCheckNotificationSchedule(handleCheckNotificationSchedule)
 
-		api.getAutoStart().then(setAutoStart)
+		api.getAutoStart().then(setAutoStart).catch((err) => console.error('[MainWindow] getAutoStart failed:', err))
 
 		return () => {
 			unsubscribeCheckSchedule()

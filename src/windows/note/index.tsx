@@ -46,9 +46,12 @@ const NoteWindow = () => {
 
 	useEffect(() => {
 		if (noteId) {
-			api.getInitialState(noteId).then((data) => {
-				if (data) setNote(data)
-			})
+			api
+				.getInitialState(noteId)
+				.then((data) => {
+					if (data) setNote(data)
+				})
+				.catch((err) => console.error('[NoteWindow] getInitialState failed:', err))
 		} else {
 			window.close()
 		}
