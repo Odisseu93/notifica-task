@@ -6,5 +6,5 @@ import { AlarmSoundKeyType } from '@/libs/app-notification'
 export default new Store<{
 	notesNotification: Record<string, NoteNotification>
 	notes: Record<string, Note>
-	alarmSound: AlarmSoundKeyType
+	notificationSound: AlarmSoundKeyType
 }>()

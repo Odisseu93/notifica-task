@@ -1,5 +1,5 @@
 import EventEmitter from 'node:events'
-import { fileURLToPath } from 'node:url'
+import { fileURLToPath, pathToFileURL } from 'node:url'
 import path from 'node:path'
 
 import { app, BrowserWindow, ipcMain, Notification, Tray } from 'electron'
@@ -23,21 +23,31 @@ process.env.VITE_PUBLIC = VITE_DEV_SERVER_URL ? path.join(process.env.APP_ROOT, 
 const isDev = !!VITE_DEV_SERVER_URL
 let windows: BrowserWindow[] = []
 let mainWindow: BrowserWindow
-let aboutWindow: BrowserWindow
+let aboutWindow: BrowserWindow | undefined
 let notesState: Record<string, Note> = store.get('notes') || {}
 let notesNotificationState: Record<string, NoteNotification> = store.get('notesNotification') || {}
 let activeNotesId: string[] = []
 
 const eventEmitter = new EventEmitter()
 
+let notificationScheduleJob: schedule.Job | null = null
+
 const preload = path.join(__dirname, 'preload.mjs')
 
 const saveNotes = () => {
-	store.set('notes', notesState)
+	try {
+		store.set('notes', notesState)
+	} catch (err) {
+		console.error('[main] saveNotes failed:', err)
+	}
 }
 
 const saveNotesNotification = () => {
-	store.set('notesNotification', notesNotificationState)
+	try {
+		store.set('notesNotification', notesNotificationState)
+	} catch (err) {
+		console.error('[main] saveNotesNotification failed:', err)
+	}
 }
 
 const createMainWindow = () => {
@@ -76,15 +86,17 @@ const createMainWindow = () => {
 	})
 
 	mainWindow.on('closed', () => {
+		notificationScheduleJob?.cancel()
+		notificationScheduleJob = null
 		eventEmitter.removeAllListeners('windows-close')
 		app.quit()
 	})
 
-	// pooling for notifications, executing every 3 seconds
-	schedule.scheduleJob('*/10 * * * * *', () => {
-		if (!mainWindow.isDestroyed()) {
-			mainWindow.webContents.send('check-notification-schedule', notesNotificationState)
-		}
+	// polling for notifications, every 10 seconds; only send when there are scheduled notifications
+	notificationScheduleJob = schedule.scheduleJob('*/10 * * * * *', () => {
+		if (mainWindow.isDestroyed()) return
+		if (Object.keys(notesNotificationState).length === 0) return
+		mainWindow.webContents.send('check-notification-schedule', notesNotificationState)
 	})
 }
 
@@ -107,7 +119,7 @@ const createAboutWindow = () => {
 		aboutWindow.loadURL(`${VITE_DEV_SERVER_URL}#about`)
 	} else {
 		const indexPath = path.join(__dirname, '../dist/index.html')
-		aboutWindow.loadURL(`file://${indexPath}#about`)
+		aboutWindow.loadURL(`${pathToFileURL(indexPath).toString()}#about`)
 	}
 }
 
@@ -129,9 +141,8 @@ const createNoteWindow = (note: Note) => {
 	if (isDev) {
 		win.loadURL(`${VITE_DEV_SERVER_URL}#note?noteId=${note.id}`)
 	} else {
-		// win.loadFile(path.join(__dirname, '../dist/index.html'))
 		const indexPath = path.join(__dirname, '../dist/index.html')
-		win.loadURL(`file://${indexPath}#note?noteId=${note.id}`)
+		win.loadURL(`${pathToFileURL(indexPath).toString()}#note?noteId=${note.id}`)
 	}
 
 	windows.push(win)
@@ -164,11 +175,21 @@ const createNoteWindow = (note: Note) => {
 }
 
 ipcMain.handle('get-notification-schedule', (_, noteId): NoteNotification | undefined => {
-	return notesNotificationState?.[noteId] || {}
+	try {
+		return notesNotificationState?.[noteId]
+	} catch (err) {
+		console.error('[main] get-notification-schedule failed:', err)
+		return undefined
+	}
 })
 
 ipcMain.handle('get-initial-state', (_, noteId): Note | undefined => {
-	return notesState[noteId]
+	try {
+		return notesState[noteId]
+	} catch (err) {
+		console.error('[main] get-initial-state failed:', err)
+		return undefined
+	}
 })
 
 // IPC: update note
@@ -184,21 +205,26 @@ ipcMain.on('update-note', (_, updatedNote: Note) => {
 
 // IPC: create a new note
 ipcMain.on('create-new-note', () => {
-	const newNote: Note = {
-		id: Date.now().toString(),
-		content: '',
-		y: 100,
-		x: 100,
-	}
+	try {
+		const newNote: Note = {
+			id: Date.now().toString(),
+			content: '',
+			y: 100,
+			x: 100,
+		}
 
-	notesState[newNote.id] = newNote
-	saveNotes()
-	createNoteWindow(newNote)
+		notesState[newNote.id] = newNote
+		saveNotes()
+		createNoteWindow(newNote)
+	} catch (err) {
+		console.error('[main] create-new-note failed:', err)
+		new Notification({ title: 'Error', body: 'Could not create note.' }).show()
+	}
 })
 
 // IPC: remove note
 ipcMain.on('delete-note', (_, noteId: string) => {
-	// romove from state
+	// remove from state
 	delete notesState[noteId]
 	saveNotes()
 
@@ -276,26 +302,30 @@ ipcMain.handle('delete-all-notes', () => {
 })
 
 ipcMain.handle('open-all-notes', () => {
-	if (Object.keys(notesState).length >= 0) {
-		Object.values(notesState)
-			.filter((note) => !activeNotesId.includes(note.id))
-			.forEach((note) => createNoteWindow(note))
-	}
-
 	if (Object.keys(notesState).length === 0) {
 		new Notification({
 			title: 'alert',
 			body: "You don't have any note to open!",
 		}).show()
+		return
 	}
-
-	return
+	Object.values(notesState)
+		.filter((note) => !activeNotesId.includes(note.id))
+		.forEach((note) => createNoteWindow(note))
 })
 
-ipcMain.handle('open-about-window', createAboutWindow)
+ipcMain.handle('open-about-window', () => {
+	try {
+		createAboutWindow()
+	} catch (err) {
+		console.error('[main] open-about-window failed:', err)
+	}
+})
 
 ipcMain.handle('close-about-window', () => {
-	aboutWindow.close()
+	if (aboutWindow && !aboutWindow.isDestroyed()) {
+		aboutWindow.close()
+	}
 })
 
 ipcMain.handle('close-app', () => {
@@ -308,7 +338,12 @@ ipcMain.on('change-notification-sound', (_, sound: AlarmSoundKeyType) => {
 })
 
 ipcMain.handle('get-notification-sound', () => {
-	return store.get('notificationSound')
+	try {
+		return store.get('notificationSound')
+	} catch (err) {
+		console.error('[main] get-notification-sound failed:', err)
+		return undefined
+	}
 })
 
 ipcMain.handle('get-about-info', () => {
@@ -343,14 +378,25 @@ const isAutoLaunchEnabled = () => {
 }
 
 ipcMain.handle('get-auto-launch', () => {
-	return isAutoLaunchEnabled()
+	try {
+		return isAutoLaunchEnabled()
+	} catch (err) {
+		console.error('[main] get-auto-launch failed:', err)
+		return false
+	}
 })
 
 ipcMain.handle('set-auto-launch', (_, enable) => {
-	if (enable) {
-		enableAutoLaunch()
-	} else {
-		disableAutoLaunch()
+	try {
+		if (enable) {
+			enableAutoLaunch()
+		} else {
+			disableAutoLaunch()
+		}
+		return true
+	} catch (err) {
+		console.error('[main] set-auto-launch failed:', err)
+		return false
 	}
 })
 

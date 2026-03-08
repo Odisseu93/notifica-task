@@ -14,6 +14,9 @@ dist-ssr
 dist-electron
 *.local
 
+# Local plan progress (do not commit)
+.plan-progress.md
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json

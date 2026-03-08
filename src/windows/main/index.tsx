@@ -4,35 +4,33 @@ import './styles.css'
 import { api } from '@/libs/api'
 import { NoteNotification } from '../../../interfaces/note-notification-interface'
 import { AppNotification, AlarmSounds } from '@/libs/app-notification'
+import { now, getNextRecurrenceDate } from '@/utils/date'
 import CustomSelect from '../../components/custom-select'
 import MainWindowButton from '@/components/main-window-button'
 import { X } from 'lucide-react'
 
-const now = () => {
-	const date = new Date()
-	date.setSeconds(0)
-	date.setMilliseconds(0)
-
-	return date.toISOString()
-}
-
 const MainWindow = () => {
-	const sounList = Object.entries(AlarmSounds).map(([key, sound]) => ({ key, value: sound.name }))
+	const soundList = Object.entries(AlarmSounds).map(([key, sound]) => ({ key, value: sound.name }))
 	const [defaultSoundValue, setDefaultSoundValue] = useState('')
 	const [autoStart, setAutoStart] = useState(false)
 
 	const handleToggleAutoStart = async () => {
 		const newValue = !autoStart
-		await api.setAutoStart(newValue)
-		setAutoStart(newValue)
+		try {
+			await api.setAutoStart(newValue)
+			setAutoStart(newValue)
+		} catch (err) {
+			console.error('[MainWindow] setAutoStart failed:', err)
+		}
 	}
 
 	useEffect(() => {
 		api
 			.getNotificationSound()
-			.then((key) => setDefaultSoundValue(sounList.find((sound) => sound.key === key)?.value || ''))
+			.then((key) => setDefaultSoundValue(soundList.find((sound) => sound.key === key)?.value || ''))
+			.catch((err) => console.error('[MainWindow] getNotificationSound failed:', err))
 
-		window.ipcRenderer.on('check-notification-schedule', (_event, scheduleNotifications) => {
+		const handleCheckNotificationSchedule = (scheduleNotifications: Record<string, NoteNotification> | undefined) => {
 			if (scheduleNotifications) {
 				Object.values(scheduleNotifications).map(async (data: unknown) => {
 					const noteNotification = data as NoteNotification
@@ -65,28 +63,19 @@ const MainWindow = () => {
 							}
 
 							if (noteNotification?.recurrence) {
-								const nextDate = new Date(scheduled)
-								switch (noteNotification?.recurrence) {
-									case 'daily':
-										nextDate.setDate(nextDate.getDate() + 1)
-										break
-									case 'weekly':
-										nextDate.setDate(nextDate.getDate() + 7)
-										break
-									case 'monthly':
-										nextDate.setMonth(nextDate.getMonth() + 1)
-										break
-								}
-
-								const upadetedNotification: NoteNotification = {
+								const nextDateISO = getNextRecurrenceDate(
+									scheduled,
+									noteNotification.recurrence
+								)
+								const updatedNotification: NoteNotification = {
 									...noteNotification,
 									noteId: noteNotification?.noteId,
 									sound: 'default',
 
-									scheduleDate: nextDate.toISOString(),
+									scheduleDate: nextDateISO,
 								}
 
-								api.updateNoteNotification(upadetedNotification)
+								api.updateNoteNotification(updatedNotification)
 							} else {
 								api.deleteNoteNotification(noteId)
 							}
@@ -94,21 +83,27 @@ const MainWindow = () => {
 					}
 				})
 			}
-		})
+		}
 
-		api.getAutoStart().then(setAutoStart)
-	}, [])
+		const unsubscribeCheckSchedule = api.onCheckNotificationSchedule(handleCheckNotificationSchedule)
+
+		api.getAutoStart().then(setAutoStart).catch((err) => console.error('[MainWindow] getAutoStart failed:', err))
+
+		return () => {
+			unsubscribeCheckSchedule()
+		}
+	}, []) // eslint-disable-line react-hooks/exhaustive-deps -- soundList stable
 
 	return (
 		<main className='container'>
 			<header className='header'>
-				<button type='button' title='close' onClick={api.hideMainWindow}>
+				<button type='button' title='close' aria-label='Close main window' onClick={api.hideMainWindow}>
 					<X color='#FFFFFF' />
 				</button>
 			</header>
 			<CustomSelect
 				label='Sound:'
-				list={sounList}
+				list={soundList}
 				defaultValue={defaultSoundValue}
 				key={defaultSoundValue}
 				onChange={(value) => {
@@ -127,7 +122,7 @@ const MainWindow = () => {
 			<button className='about-button' onClick={api.openAboutWindow}>
 				About
 			</button>
-			<button className='quite-button' onClick={api.closeApp}>
+			<button className='quit-button' onClick={api.closeApp}>
 				Quit
 			</button>
 		</main>

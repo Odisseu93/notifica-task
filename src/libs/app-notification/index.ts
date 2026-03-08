@@ -17,7 +17,7 @@ export const AlarmSounds = {
 		src: achievementSoundSrc,
 	},
 	relaxingBell: {
-		name: 'Realaxing bell',
+		name: 'Relaxing bell',
 		src: relaxingBellSoundSrc,
 	},
 }

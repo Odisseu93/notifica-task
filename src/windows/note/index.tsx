@@ -13,7 +13,7 @@ const NoteWindow = () => {
 	const [isMenuEnabled, setIsMenuEnabled] = useState(false)
 	const hash = window.location.hash // "#note?noteId=123"
 	const [, queryString] = hash.substring(1).split('?')
-	const noteId = new URLSearchParams(queryString).get('noteId')
+	const noteId = new URLSearchParams(queryString ?? '').get('noteId')
 
 	const handleContentChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
 		if (!note) return
@@ -36,7 +36,7 @@ const NoteWindow = () => {
 		api.createNewNote()
 	}
 
-	const hadleToggleMenu = () => {
+	const handleToggleMenu = () => {
 		setIsMenuEnabled(!isMenuEnabled)
 	}
 
@@ -46,9 +46,12 @@ const NoteWindow = () => {
 
 	useEffect(() => {
 		if (noteId) {
-			api.getInitialState(noteId).then((data) => {
-				if (data) setNote(data)
-			})
+			api
+				.getInitialState(noteId)
+				.then((data) => {
+					if (data) setNote(data)
+				})
+				.catch((err) => console.error('[NoteWindow] getInitialState failed:', err))
 		} else {
 			window.close()
 		}
@@ -78,27 +81,27 @@ const NoteWindow = () => {
 		}
 	}, [])
 
-	if (!note) return <div>Carregando nota...</div>
+	if (!note) return <div>Loading note...</div>
 
 	return (
 		<article className='card' id={note.id}>
 			<header>
-				<button type='button' title='add note' onClick={handleCreate}>
+				<button type='button' title='add note' aria-label='Add new note' onClick={handleCreate}>
 					<Plus color='#FFFFFF' />
 				</button>
-				<div className='close-and-elpse-button'>
-					<button type='button' title='menu' onClick={hadleToggleMenu}>
+				<div className='close-and-ellipse-button'>
+					<button type='button' title='menu' aria-label='Open menu' onClick={handleToggleMenu}>
 						<Ellipsis color='#FFFFFF' />
 					</button>
 					<ul className={`menu menu--${isMenuEnabled ? 'enabled' : 'disabled'}`}>
 						<li>
-							<button title='delete' type='button' className='text-[tomato]' onClick={handleDelete}>
+							<button title='delete' type='button' className='text-[tomato]' aria-label='Delete note' onClick={handleDelete}>
 								<Trash2 color='#141414' />
 								<span className='button-text'>Delete note</span>
 							</button>
 						</li>
 					</ul>
-					<button type='button' title='close' onClick={handleClose}>
+					<button type='button' title='close' aria-label='Close note window' onClick={handleClose}>
 						<X color='#FFFFFF' />
 					</button>
 				</div>

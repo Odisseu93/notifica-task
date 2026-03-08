@@ -11,12 +11,12 @@ declare global {
 			deleteNote: (noteId: string) => void
 			onNoteUpdated: (callback: (note: Note) => void) => () => void
 			onNoteDeleted: (callback: (noteId: string) => void) => () => void
-			updateNoteNotification: (notifcation: NoteNotification) => void
+			updateNoteNotification: (notification: NoteNotification) => void
 			deleteNoteNotification: (noteId: string) => void
 			onNoteNotificationUpdated: (callback: (note: NoteNotification) => void) => () => void
 			onNoteNotificationDeleted: (callback: (noteId: string) => void) => () => void
-			getAppVersion: () => Promise<string>
-			getNotificationSchedule: (noteId: string) => Promise<NoteNotification>
+			onCheckNotificationSchedule: (callback: (scheduleNotifications: Record<string, NoteNotification> | undefined) => void) => () => void
+			getNotificationSchedule: (noteId: string) => Promise<NoteNotification | undefined>
 			setNotificationSound: (sound: string) => Promise<void>
 			getNotificationSound: () => Promise<AlarmSoundKeyType>
 			closeAllNotes: () => Promise<void>

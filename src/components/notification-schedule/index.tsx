@@ -2,107 +2,77 @@ import { ChangeEvent, useLayoutEffect, useState } from 'react'
 
 import { NoteNotification } from '../../../interfaces/note-notification-interface'
 import { api } from '../../libs/api'
+import { now, formatDateTimeLocal } from '@/utils/date'
 
-const noteNotificationIntialState = {} as NoteNotification
-
-const now = () => {
-	const date = new Date()
-	date.setSeconds(0)
-	date.setMilliseconds(0)
-
-	return date.toISOString()
-}
+const noteNotificationInitialState = {} as NoteNotification
 
 const NotificationSchedule = ({ noteId }: { noteId: string }) => {
-	const [noteNotification, setNoteNotification] = useState<NoteNotification>(noteNotificationIntialState)
+	const [noteNotification, setNoteNotification] = useState<NoteNotification>(noteNotificationInitialState)
 	const handleUpdateRecurrence = (e: ChangeEvent<HTMLSelectElement>) => {
 		const recurrence = e.target.value as NoteNotification['recurrence']
-		const upadetedNotification: NoteNotification = {
+		const updatedNotification: NoteNotification = {
 			...noteNotification,
 			noteId,
 			sound: 'default',
 			recurrence,
 		}
 
-		setNoteNotification(upadetedNotification)
-		api.updateNoteNotification(upadetedNotification)
+		setNoteNotification(updatedNotification)
+		api.updateNoteNotification(updatedNotification)
 	}
 
 	const handleUpdateScheduleDate = (e: ChangeEvent<HTMLInputElement>) => {
 		const scheduleDate = new Date(e.target.value).toISOString()
-		const upadetedNotification: NoteNotification = {
+		const updatedNotification: NoteNotification = {
 			...noteNotification,
 			noteId,
 			sound: 'default',
 			scheduleDate,
 		}
 
-		setNoteNotification(upadetedNotification)
-		api.updateNoteNotification(upadetedNotification)
-	}
-
-	const getDate = (isoString: string) => {
-		const date = new Date(isoString)
-
-		const pad = (num: number) => String(num).padStart(2, '0')
-
-		const day = pad(date.getDate())
-		const month = pad(date.getMonth() + 1)
-		const year = date.getFullYear()
-		const hours = pad(date.getHours())
-		const minutes = pad(date.getMinutes())
-
-		return `${year}-${month}-${day}T${hours}:${minutes}`
+		setNoteNotification(updatedNotification)
+		api.updateNoteNotification(updatedNotification)
 	}
 
 	useLayoutEffect(() => {
-		api.getNotificationSchedule(noteId).then((nf) => {
-			const scheduled = noteNotification?.scheduleDate
-				? new Date(noteNotification.scheduleDate).toISOString()
-				: null
+		api
+			.getNotificationSchedule(noteId)
+			.then((nf) => {
+				const scheduled = noteNotification?.scheduleDate
+					? new Date(noteNotification.scheduleDate).toISOString()
+					: null
 
-			if (scheduled && now() >= scheduled) {
-				noteId && api.deleteNoteNotification(noteId)
-				setNoteNotification(noteNotificationIntialState)
-			} else {
-				setNoteNotification(nf)
-			}
-		})
+				if (scheduled && now() >= scheduled) {
+					noteId && api.deleteNoteNotification(noteId)
+					setNoteNotification(noteNotificationInitialState)
+				} else {
+					setNoteNotification(nf ?? noteNotificationInitialState)
+				}
+			})
+			.catch((err) => console.error('[NotificationSchedule] getNotificationSchedule failed:', err))
 
-		window.ipcRenderer.on('note-notification-updated', (_event, scheduleNotification) => {
-			if (noteId === scheduleNotification.noteId) {
-				setNoteNotification(scheduleNotification)
-			}
-		})
-
-		window.ipcRenderer.on('note-notification-deleted', (_event, scheduleNotificationId) => {
-			if (noteId === scheduleNotificationId) {
-				setNoteNotification(scheduleNotificationId)
-			}
-		})
-
-		api.onNoteNotificationUpdated((nf) => {
+		const unsubscribeUpdated = api.onNoteNotificationUpdated((nf) => {
 			if (noteId === nf.noteId) {
 				setNoteNotification(nf)
 			}
 		})
-
-		const unsubscricribeNoteNotificationDelete = () =>
-			api.onNoteNotificationDeleted((id) => {
-				if (noteId === id) {
-					setNoteNotification(noteNotificationIntialState)
-				}
-			})
+		const unsubscribeDeleted = api.onNoteNotificationDeleted((id) => {
+			if (noteId === id) {
+				setNoteNotification(noteNotificationInitialState)
+			}
+		})
 
 		return () => {
-			unsubscricribeNoteNotificationDelete()
+			unsubscribeUpdated()
+			unsubscribeDeleted()
 		}
-	}, [])
+	}, []) // eslint-disable-line react-hooks/exhaustive-deps -- characterization: current behavior (cleanup fix in plan 1.4)
 
 	return (
 		<>
 			<select
 				title='recurrence'
+				aria-label='Recurrence'
 				className='recurrence-select'
 				value={noteNotification?.recurrence ?? ''}
 				onInput={handleUpdateRecurrence}
@@ -116,7 +86,8 @@ const NotificationSchedule = ({ noteId }: { noteId: string }) => {
 			<input
 				placeholder='date'
 				type='datetime-local'
-				value={noteNotification.scheduleDate ? getDate(noteNotification?.scheduleDate) : ''}
+				aria-label='Schedule date and time'
+				value={noteNotification.scheduleDate ? formatDateTimeLocal(noteNotification.scheduleDate) : ''}
 				onChange={handleUpdateScheduleDate}
 			/>
 		</>

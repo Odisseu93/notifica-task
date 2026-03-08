@@ -5,7 +5,7 @@
 ## 🚀 Features
 
 - 🗒️ Create, edit, and delete sticky notes
-- 🔔 add reminders with alarmsDesigned for notifications and task reminders
+- 🔔 Add reminders with alarms. Designed for notifications and task reminders
 
 ## 🧩 Tech Stack
 
@@ -39,5 +39,6 @@ npm run dev
 You can download the latest version of Notifica Task for your platform:
 | Platform | Installer |
 | ---------- | ---------------------------------------------------------------------------------- |
-| 🪟 Windows | <a download="" href="https://github.com/Odisseu93/notifica-task/raw/refs/heads/main/download/Notifica%20Task-Windows-1.0.0-Setup.exe">Download</a> |
+| 🪟 Windows (1.1.0) | <a download="" href="https://github.com/Odisseu93/notifica-task/raw/refs/heads/main/download/Notifica%20Task-Windows-1.1.0-Setup.exe">Download</a> |
+| 🪟 Windows (1.0.0) | <a download="" href="https://github.com/Odisseu93/notifica-task/raw/refs/heads/main/download/Notifica%20Task-Windows-1.0.0-Setup.exe">Download</a> |
 
