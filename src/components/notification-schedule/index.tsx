@@ -48,33 +48,36 @@ const NotificationSchedule = ({ noteId }: { noteId: string }) => {
 			}
 		})
 
-		window.ipcRenderer.on('note-notification-updated', (_event, scheduleNotification) => {
+		const handleUpdated = (_event: unknown, scheduleNotification: NoteNotification) => {
 			if (noteId === scheduleNotification.noteId) {
 				setNoteNotification(scheduleNotification)
 			}
-		})
-
-		window.ipcRenderer.on('note-notification-deleted', (_event, scheduleNotificationId) => {
-			if (noteId === scheduleNotificationId) {
-				setNoteNotification(scheduleNotificationId)
+		}
+		const handleDeleted = (_event: unknown, deletedNoteId: string) => {
+			if (noteId === deletedNoteId) {
+				setNoteNotification(noteNotificationIntialState)
 			}
-		})
+		}
 
-		api.onNoteNotificationUpdated((nf) => {
+		window.ipcRenderer.on('note-notification-updated', handleUpdated)
+		window.ipcRenderer.on('note-notification-deleted', handleDeleted)
+
+		const unsubscribeUpdated = api.onNoteNotificationUpdated((nf) => {
 			if (noteId === nf.noteId) {
 				setNoteNotification(nf)
 			}
 		})
-
-		const unsubscricribeNoteNotificationDelete = () =>
-			api.onNoteNotificationDeleted((id) => {
-				if (noteId === id) {
-					setNoteNotification(noteNotificationIntialState)
-				}
-			})
+		const unsubscribeDeleted = api.onNoteNotificationDeleted((id) => {
+			if (noteId === id) {
+				setNoteNotification(noteNotificationIntialState)
+			}
+		})
 
 		return () => {
-			unsubscricribeNoteNotificationDelete()
+			window.ipcRenderer.removeListener('note-notification-updated', handleUpdated)
+			window.ipcRenderer.removeListener('note-notification-deleted', handleDeleted)
+			unsubscribeUpdated()
+			unsubscribeDeleted()
 		}
 	}, []) // eslint-disable-line react-hooks/exhaustive-deps -- characterization: current behavior (cleanup fix in plan 1.4)
 
