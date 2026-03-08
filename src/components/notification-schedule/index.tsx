@@ -2,16 +2,9 @@ import { ChangeEvent, useLayoutEffect, useState } from 'react'
 
 import { NoteNotification } from '../../../interfaces/note-notification-interface'
 import { api } from '../../libs/api'
+import { now, formatDateTimeLocal } from '@/utils/date'
 
 const noteNotificationIntialState = {} as NoteNotification
-
-const now = () => {
-	const date = new Date()
-	date.setSeconds(0)
-	date.setMilliseconds(0)
-
-	return date.toISOString()
-}
 
 const NotificationSchedule = ({ noteId }: { noteId: string }) => {
 	const [noteNotification, setNoteNotification] = useState<NoteNotification>(noteNotificationIntialState)
@@ -39,20 +32,6 @@ const NotificationSchedule = ({ noteId }: { noteId: string }) => {
 
 		setNoteNotification(upadetedNotification)
 		api.updateNoteNotification(upadetedNotification)
-	}
-
-	const getDate = (isoString: string) => {
-		const date = new Date(isoString)
-
-		const pad = (num: number) => String(num).padStart(2, '0')
-
-		const day = pad(date.getDate())
-		const month = pad(date.getMonth() + 1)
-		const year = date.getFullYear()
-		const hours = pad(date.getHours())
-		const minutes = pad(date.getMinutes())
-
-		return `${year}-${month}-${day}T${hours}:${minutes}`
 	}
 
 	useLayoutEffect(() => {
@@ -97,7 +76,7 @@ const NotificationSchedule = ({ noteId }: { noteId: string }) => {
 		return () => {
 			unsubscricribeNoteNotificationDelete()
 		}
-	}, [])
+	}, []) // eslint-disable-line react-hooks/exhaustive-deps -- characterization: current behavior (cleanup fix in plan 1.4)
 
 	return (
 		<>
@@ -116,7 +95,7 @@ const NotificationSchedule = ({ noteId }: { noteId: string }) => {
 			<input
 				placeholder='date'
 				type='datetime-local'
-				value={noteNotification.scheduleDate ? getDate(noteNotification?.scheduleDate) : ''}
+				value={noteNotification.scheduleDate ? formatDateTimeLocal(noteNotification.scheduleDate) : ''}
 				onChange={handleUpdateScheduleDate}
 			/>
 		</>

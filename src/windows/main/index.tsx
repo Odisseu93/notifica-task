@@ -4,17 +4,10 @@ import './styles.css'
 import { api } from '@/libs/api'
 import { NoteNotification } from '../../../interfaces/note-notification-interface'
 import { AppNotification, AlarmSounds } from '@/libs/app-notification'
+import { now, getNextRecurrenceDate } from '@/utils/date'
 import CustomSelect from '../../components/custom-select'
 import MainWindowButton from '@/components/main-window-button'
 import { X } from 'lucide-react'
-
-const now = () => {
-	const date = new Date()
-	date.setSeconds(0)
-	date.setMilliseconds(0)
-
-	return date.toISOString()
-}
 
 const MainWindow = () => {
 	const sounList = Object.entries(AlarmSounds).map(([key, sound]) => ({ key, value: sound.name }))
@@ -65,25 +58,16 @@ const MainWindow = () => {
 							}
 
 							if (noteNotification?.recurrence) {
-								const nextDate = new Date(scheduled)
-								switch (noteNotification?.recurrence) {
-									case 'daily':
-										nextDate.setDate(nextDate.getDate() + 1)
-										break
-									case 'weekly':
-										nextDate.setDate(nextDate.getDate() + 7)
-										break
-									case 'monthly':
-										nextDate.setMonth(nextDate.getMonth() + 1)
-										break
-								}
-
+								const nextDateISO = getNextRecurrenceDate(
+									scheduled,
+									noteNotification.recurrence
+								)
 								const upadetedNotification: NoteNotification = {
 									...noteNotification,
 									noteId: noteNotification?.noteId,
 									sound: 'default',
 
-									scheduleDate: nextDate.toISOString(),
+									scheduleDate: nextDateISO,
 								}
 
 								api.updateNoteNotification(upadetedNotification)
@@ -97,7 +81,7 @@ const MainWindow = () => {
 		})
 
 		api.getAutoStart().then(setAutoStart)
-	}, [])
+	}, []) // eslint-disable-line react-hooks/exhaustive-deps -- characterization: current behavior (sounList stable)
 
 	return (
 		<main className='container'>
