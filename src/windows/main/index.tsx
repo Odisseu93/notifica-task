@@ -10,7 +10,7 @@ import MainWindowButton from '@/components/main-window-button'
 import { X } from 'lucide-react'
 
 const MainWindow = () => {
-	const sounList = Object.entries(AlarmSounds).map(([key, sound]) => ({ key, value: sound.name }))
+	const soundList = Object.entries(AlarmSounds).map(([key, sound]) => ({ key, value: sound.name }))
 	const [defaultSoundValue, setDefaultSoundValue] = useState('')
 	const [autoStart, setAutoStart] = useState(false)
 
@@ -23,7 +23,7 @@ const MainWindow = () => {
 	useEffect(() => {
 		api
 			.getNotificationSound()
-			.then((key) => setDefaultSoundValue(sounList.find((sound) => sound.key === key)?.value || ''))
+			.then((key) => setDefaultSoundValue(soundList.find((sound) => sound.key === key)?.value || ''))
 
 		const handleCheckNotificationSchedule = (scheduleNotifications: Record<string, NoteNotification> | undefined) => {
 			if (scheduleNotifications) {
@@ -62,7 +62,7 @@ const MainWindow = () => {
 									scheduled,
 									noteNotification.recurrence
 								)
-								const upadetedNotification: NoteNotification = {
+								const updatedNotification: NoteNotification = {
 									...noteNotification,
 									noteId: noteNotification?.noteId,
 									sound: 'default',
@@ -70,7 +70,7 @@ const MainWindow = () => {
 									scheduleDate: nextDateISO,
 								}
 
-								api.updateNoteNotification(upadetedNotification)
+								api.updateNoteNotification(updatedNotification)
 							} else {
 								api.deleteNoteNotification(noteId)
 							}
@@ -87,7 +87,7 @@ const MainWindow = () => {
 		return () => {
 			unsubscribeCheckSchedule()
 		}
-	}, []) // eslint-disable-line react-hooks/exhaustive-deps -- characterization: current behavior (sounList stable)
+	}, []) // eslint-disable-line react-hooks/exhaustive-deps -- soundList stable
 
 	return (
 		<main className='container'>
@@ -98,7 +98,7 @@ const MainWindow = () => {
 			</header>
 			<CustomSelect
 				label='Sound:'
-				list={sounList}
+				list={soundList}
 				defaultValue={defaultSoundValue}
 				key={defaultSoundValue}
 				onChange={(value) => {
@@ -117,7 +117,7 @@ const MainWindow = () => {
 			<button className='about-button' onClick={api.openAboutWindow}>
 				About
 			</button>
-			<button className='quite-button' onClick={api.closeApp}>
+			<button className='quit-button' onClick={api.closeApp}>
 				Quit
 			</button>
 		</main>

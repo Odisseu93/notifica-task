@@ -4,34 +4,34 @@ import { NoteNotification } from '../../../interfaces/note-notification-interfac
 import { api } from '../../libs/api'
 import { now, formatDateTimeLocal } from '@/utils/date'
 
-const noteNotificationIntialState = {} as NoteNotification
+const noteNotificationInitialState = {} as NoteNotification
 
 const NotificationSchedule = ({ noteId }: { noteId: string }) => {
-	const [noteNotification, setNoteNotification] = useState<NoteNotification>(noteNotificationIntialState)
+	const [noteNotification, setNoteNotification] = useState<NoteNotification>(noteNotificationInitialState)
 	const handleUpdateRecurrence = (e: ChangeEvent<HTMLSelectElement>) => {
 		const recurrence = e.target.value as NoteNotification['recurrence']
-		const upadetedNotification: NoteNotification = {
+		const updatedNotification: NoteNotification = {
 			...noteNotification,
 			noteId,
 			sound: 'default',
 			recurrence,
 		}
 
-		setNoteNotification(upadetedNotification)
-		api.updateNoteNotification(upadetedNotification)
+		setNoteNotification(updatedNotification)
+		api.updateNoteNotification(updatedNotification)
 	}
 
 	const handleUpdateScheduleDate = (e: ChangeEvent<HTMLInputElement>) => {
 		const scheduleDate = new Date(e.target.value).toISOString()
-		const upadetedNotification: NoteNotification = {
+		const updatedNotification: NoteNotification = {
 			...noteNotification,
 			noteId,
 			sound: 'default',
 			scheduleDate,
 		}
 
-		setNoteNotification(upadetedNotification)
-		api.updateNoteNotification(upadetedNotification)
+		setNoteNotification(updatedNotification)
+		api.updateNoteNotification(updatedNotification)
 	}
 
 	useLayoutEffect(() => {
@@ -42,9 +42,9 @@ const NotificationSchedule = ({ noteId }: { noteId: string }) => {
 
 			if (scheduled && now() >= scheduled) {
 				noteId && api.deleteNoteNotification(noteId)
-				setNoteNotification(noteNotificationIntialState)
+				setNoteNotification(noteNotificationInitialState)
 			} else {
-				setNoteNotification(nf ?? noteNotificationIntialState)
+				setNoteNotification(nf ?? noteNotificationInitialState)
 			}
 		})
 
@@ -55,7 +55,7 @@ const NotificationSchedule = ({ noteId }: { noteId: string }) => {
 		})
 		const unsubscribeDeleted = api.onNoteNotificationDeleted((id) => {
 			if (noteId === id) {
-				setNoteNotification(noteNotificationIntialState)
+				setNoteNotification(noteNotificationInitialState)
 			}
 		})
 
