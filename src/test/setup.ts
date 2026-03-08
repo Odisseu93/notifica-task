@@ -1,11 +1,6 @@
 import '@testing-library/jest-dom/vitest'
 import { vi } from 'vitest'
 
-const mockInvoke = vi.fn()
-const mockSend = vi.fn()
-const mockOn = vi.fn(() => ({ removeListener: vi.fn() }))
-const mockRemoveListener = vi.fn()
-
 const electronMock = {
 	getInitialState: vi.fn(() => Promise.resolve(undefined)),
 	updateNote: vi.fn(),
@@ -17,6 +12,7 @@ const electronMock = {
 	deleteNoteNotification: vi.fn(),
 	onNoteNotificationUpdated: vi.fn(() => vi.fn()),
 	onNoteNotificationDeleted: vi.fn(() => vi.fn()),
+	onCheckNotificationSchedule: vi.fn(() => vi.fn()),
 	getNotificationSchedule: vi.fn(() => Promise.resolve({})),
 	setNotificationSound: vi.fn(),
 	getNotificationSound: vi.fn(() => Promise.resolve('default')),
@@ -44,16 +40,8 @@ const electronMock = {
 
 const win = globalThis.window as Window & {
 	electron: typeof electronMock
-	ipcRenderer: { on: typeof mockOn; off: typeof vi.fn; send: typeof mockSend; invoke: typeof mockInvoke; removeListener: typeof mockRemoveListener }
 	close: typeof vi.fn
 }
 win.electron = electronMock
-win.ipcRenderer = {
-	on: mockOn,
-	off: vi.fn(),
-	send: mockSend,
-	invoke: mockInvoke,
-	removeListener: mockRemoveListener,
-}
 win.close = vi.fn()
 

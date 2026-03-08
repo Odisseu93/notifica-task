@@ -48,20 +48,6 @@ const NotificationSchedule = ({ noteId }: { noteId: string }) => {
 			}
 		})
 
-		const handleUpdated = (_event: unknown, scheduleNotification: NoteNotification) => {
-			if (noteId === scheduleNotification.noteId) {
-				setNoteNotification(scheduleNotification)
-			}
-		}
-		const handleDeleted = (_event: unknown, deletedNoteId: string) => {
-			if (noteId === deletedNoteId) {
-				setNoteNotification(noteNotificationIntialState)
-			}
-		}
-
-		window.ipcRenderer.on('note-notification-updated', handleUpdated)
-		window.ipcRenderer.on('note-notification-deleted', handleDeleted)
-
 		const unsubscribeUpdated = api.onNoteNotificationUpdated((nf) => {
 			if (noteId === nf.noteId) {
 				setNoteNotification(nf)
@@ -74,8 +60,6 @@ const NotificationSchedule = ({ noteId }: { noteId: string }) => {
 		})
 
 		return () => {
-			window.ipcRenderer.removeListener('note-notification-updated', handleUpdated)
-			window.ipcRenderer.removeListener('note-notification-deleted', handleDeleted)
 			unsubscribeUpdated()
 			unsubscribeDeleted()
 		}

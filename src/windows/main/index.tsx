@@ -25,7 +25,7 @@ const MainWindow = () => {
 			.getNotificationSound()
 			.then((key) => setDefaultSoundValue(sounList.find((sound) => sound.key === key)?.value || ''))
 
-		const handleCheckNotificationSchedule = (_event: unknown, scheduleNotifications: Record<string, NoteNotification> | undefined) => {
+		const handleCheckNotificationSchedule = (scheduleNotifications: Record<string, NoteNotification> | undefined) => {
 			if (scheduleNotifications) {
 				Object.values(scheduleNotifications).map(async (data: unknown) => {
 					const noteNotification = data as NoteNotification
@@ -80,12 +80,12 @@ const MainWindow = () => {
 			}
 		}
 
-		window.ipcRenderer.on('check-notification-schedule', handleCheckNotificationSchedule)
+		const unsubscribeCheckSchedule = api.onCheckNotificationSchedule(handleCheckNotificationSchedule)
 
 		api.getAutoStart().then(setAutoStart)
 
 		return () => {
-			window.ipcRenderer.removeListener('check-notification-schedule', handleCheckNotificationSchedule)
+			unsubscribeCheckSchedule()
 		}
 	}, []) // eslint-disable-line react-hooks/exhaustive-deps -- characterization: current behavior (sounList stable)
 

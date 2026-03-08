@@ -15,6 +15,7 @@ declare global {
 			deleteNoteNotification: (noteId: string) => void
 			onNoteNotificationUpdated: (callback: (note: NoteNotification) => void) => () => void
 			onNoteNotificationDeleted: (callback: (noteId: string) => void) => () => void
+			onCheckNotificationSchedule: (callback: (scheduleNotifications: Record<string, NoteNotification> | undefined) => void) => () => void
 			getNotificationSchedule: (noteId: string) => Promise<NoteNotification | undefined>
 			setNotificationSound: (sound: string) => Promise<void>
 			getNotificationSound: () => Promise<AlarmSoundKeyType>
