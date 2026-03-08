@@ -164,7 +164,7 @@ const createNoteWindow = (note: Note) => {
 }
 
 ipcMain.handle('get-notification-schedule', (_, noteId): NoteNotification | undefined => {
-	return notesNotificationState?.[noteId] || {}
+	return notesNotificationState?.[noteId]
 })
 
 ipcMain.handle('get-initial-state', (_, noteId): Note | undefined => {
@@ -354,6 +354,7 @@ ipcMain.handle('set-auto-launch', (_, enable) => {
 	} else {
 		disableAutoLaunch()
 	}
+	return true
 })
 
 app.whenReady().then(async () => {

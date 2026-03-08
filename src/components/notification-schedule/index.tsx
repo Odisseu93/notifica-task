@@ -44,7 +44,7 @@ const NotificationSchedule = ({ noteId }: { noteId: string }) => {
 				noteId && api.deleteNoteNotification(noteId)
 				setNoteNotification(noteNotificationIntialState)
 			} else {
-				setNoteNotification(nf)
+				setNoteNotification(nf ?? noteNotificationIntialState)
 			}
 		})
 
