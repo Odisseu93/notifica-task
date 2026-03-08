@@ -89,7 +89,7 @@ const NoteWindow = () => {
 				<button type='button' title='add note' aria-label='Add new note' onClick={handleCreate}>
 					<Plus color='#FFFFFF' />
 				</button>
-				<div className='close-and-elpse-button'>
+				<div className='close-and-ellipse-button'>
 					<button type='button' title='menu' aria-label='Open menu' onClick={handleToggleMenu}>
 						<Ellipsis color='#FFFFFF' />
 					</button>

@@ -16,7 +16,7 @@ button {
   -webkit-app-region: none;
 }
 
-.card>header>.close-and-elpse-button {
+.card>header>.close-and-ellipse-button {
   @apply flex gap-4;
 }
 
