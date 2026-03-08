@@ -80,7 +80,7 @@ const createMainWindow = () => {
 		app.quit()
 	})
 
-	// pooling for notifications, executing every 3 seconds
+	// polling for notifications, every 10 seconds
 	schedule.scheduleJob('*/10 * * * * *', () => {
 		if (!mainWindow.isDestroyed()) {
 			mainWindow.webContents.send('check-notification-schedule', notesNotificationState)
@@ -198,7 +198,7 @@ ipcMain.on('create-new-note', () => {
 
 // IPC: remove note
 ipcMain.on('delete-note', (_, noteId: string) => {
-	// romove from state
+	// remove from state
 	delete notesState[noteId]
 	saveNotes()
 
@@ -276,20 +276,16 @@ ipcMain.handle('delete-all-notes', () => {
 })
 
 ipcMain.handle('open-all-notes', () => {
-	if (Object.keys(notesState).length >= 0) {
-		Object.values(notesState)
-			.filter((note) => !activeNotesId.includes(note.id))
-			.forEach((note) => createNoteWindow(note))
-	}
-
 	if (Object.keys(notesState).length === 0) {
 		new Notification({
 			title: 'alert',
 			body: "You don't have any note to open!",
 		}).show()
+		return
 	}
-
-	return
+	Object.values(notesState)
+		.filter((note) => !activeNotesId.includes(note.id))
+		.forEach((note) => createNoteWindow(note))
 })
 
 ipcMain.handle('open-about-window', createAboutWindow)
