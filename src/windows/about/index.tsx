@@ -1,9 +1,11 @@
 import { useState, useLayoutEffect } from 'react'
+import { useTranslation } from 'react-i18next'
 import './styles.css'
 import { X } from 'lucide-react'
 import { api } from '@/libs/api'
 
 const AboutWindow = () => {
+	const { t } = useTranslation('about')
 	const [info, setInfo] = useState<Awaited<ReturnType<typeof api.getAboutInfo>> | null>(null)
 
 	useLayoutEffect(() => {
@@ -15,39 +17,39 @@ const AboutWindow = () => {
 			{info ? (
 				<main className='about-container'>
 					<header className='top-bar'>
-						<button type='button' title='close' aria-label='Close about window' onClick={api.closeAboutWindow}>
+						<button type='button' title='close' aria-label={t('closeWindow')} onClick={api.closeAboutWindow}>
 							<X color='#FFFFFF' />
 						</button>
 					</header>
 					<h1 className='app-name'>Notifica Task</h1>
 					<div className='info'>
 						<p>
-							<strong>Version: </strong>
+							<strong>{t('version')} </strong>
 							{info.appVersion}
 						</p>
 
 						<p>
-							<strong>Electron Version: </strong>
+							<strong>{t('electronVersion')} </strong>
 							{info.electronVersion}
 						</p>
 
 						<p>
-							<strong>Node Version: </strong>
+							<strong>{t('nodeVersion')} </strong>
 							{info.nodeVersion}
 						</p>
 
 						<p>
-							<strong>Chrome Version: </strong>
+							<strong>{t('chromeVersion')} </strong>
 							{info.chromeVersion}
 						</p>
 
 						<p>
-							<strong>Platform and Architecture: </strong>
+							<strong>{t('platformAndArch')} </strong>
 							{info.platform} ({info.arch})
 						</p>
 
 						<p>
-							<strong>Developed by: </strong>
+							<strong>{t('developedBy')} </strong>
 							<a href='https://github.com/Odisseu93' target='_blank' rel='noopener noreferrer'>
 								Odisseu93 - Ulisses Silvério
 							</a>
@@ -55,7 +57,7 @@ const AboutWindow = () => {
 					</div>
 				</main>
 			) : (
-				<span>Loading...</span>
+				<span>{t('loading')}</span>
 			)}
 		</>
 	)

@@ -7,7 +7,8 @@
 		"deleteAllNotes": "Excluir todas as notas",
 		"startupWithSystem": "Iniciar com o sistema",
 		"about": "Sobre",
-		"quit": "Sair"
+		"quit": "Sair",
+		"closeWindow": "Fechar janela principal"
 	},
 	"note": {
 		"loading": "Carregando nota...",
@@ -24,7 +25,8 @@
 		"chromeVersion": "Versão do Chrome:",
 		"platformAndArch": "Plataforma e arquitetura:",
 		"developedBy": "Desenvolvido por:",
-		"loading": "Carregando..."
+		"loading": "Carregando...",
+		"closeWindow": "Fechar janela Sobre"
 	},
 	"schedule": {
 		"recurrence": "Recorrência",
@@ -32,7 +34,8 @@
 		"daily": "Diário",
 		"weekly": "Semanal",
 		"monthly": "Mensal",
-		"datePlaceholder": "data"
+		"datePlaceholder": "data",
+		"scheduleDateLabel": "Data e hora do agendamento"
 	},
 	"sounds": {
 		"default": "Som padrão",

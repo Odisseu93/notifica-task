@@ -1,5 +1,6 @@
 import '@testing-library/jest-dom/vitest'
 import { vi } from 'vitest'
+import '../i18n'
 
 const electronMock = {
 	getInitialState: vi.fn(() => Promise.resolve(undefined)),

@@ -7,7 +7,8 @@
 		"deleteAllNotes": "Delete all notes",
 		"startupWithSystem": "Startup with system",
 		"about": "About",
-		"quit": "Quit"
+		"quit": "Quit",
+		"closeWindow": "Close main window"
 	},
 	"note": {
 		"loading": "Loading note...",
@@ -24,7 +25,8 @@
 		"chromeVersion": "Chrome Version:",
 		"platformAndArch": "Platform and Architecture:",
 		"developedBy": "Developed by:",
-		"loading": "Loading..."
+		"loading": "Loading...",
+		"closeWindow": "Close about window"
 	},
 	"schedule": {
 		"recurrence": "Recurrence",
@@ -32,7 +34,8 @@
 		"daily": "Daily",
 		"weekly": "Weekly",
 		"monthly": "Monthly",
-		"datePlaceholder": "date"
+		"datePlaceholder": "date",
+		"scheduleDateLabel": "Schedule date and time"
 	},
 	"sounds": {
 		"default": "Default sound",
