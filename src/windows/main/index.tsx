@@ -9,11 +9,13 @@ import { now, getNextRecurrenceDate } from '@/utils/date'
 import CustomSelect from '../../components/custom-select'
 import MainWindowButton from '@/components/main-window-button'
 import { X } from 'lucide-react'
+import i18n from '@/i18n'
 
 const MainWindow = () => {
 	const { t } = useTranslation('main')
 	const { t: tSounds } = useTranslation('sounds')
 	const { t: tSystem } = useTranslation('system')
+	const { t: tLanguage } = useTranslation('language')
 	const soundList = Object.entries(AlarmSounds).map(([key]) => ({ key, value: tSounds(key) }))
 	const [defaultSoundValue, setDefaultSoundValue] = useState('')
 	const [autoStart, setAutoStart] = useState(false)
@@ -122,6 +124,22 @@ const MainWindow = () => {
 			<div className='start-up-with-system-container'>
 				<input type='checkbox' id='autoStart' checked={autoStart} onChange={handleToggleAutoStart} />
 				<label htmlFor='autoStart'>{t('startupWithSystem')}</label>
+			</div>
+			<div className='language-switcher-container'>
+				<label htmlFor='locale' className='language-label'>
+					{tLanguage('label')}
+				</label>
+				<select
+					id='locale'
+					role='combobox'
+					aria-label={tLanguage('label')}
+					value={i18n.language}
+					onChange={(e) => api.setLocale(e.target.value)}
+				>
+					<option value='en'>{tLanguage('en')}</option>
+					<option value='pt-BR'>{tLanguage('pt-BR')}</option>
+					<option value='es'>{tLanguage('es')}</option>
+				</select>
 			</div>
 			<button className='about-button' onClick={api.openAboutWindow}>
 				{t('about')}

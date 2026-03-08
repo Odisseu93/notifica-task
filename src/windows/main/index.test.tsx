@@ -1,7 +1,7 @@
 /// <reference types="@testing-library/jest-dom/vitest" />
 import React from 'react'
 import { describe, it, expect } from 'vitest'
-import { render, screen } from '@testing-library/react'
+import { render, screen, fireEvent } from '@testing-library/react'
 import MainWindow from './index'
 
 describe('MainWindow', () => {
@@ -24,5 +24,15 @@ describe('MainWindow', () => {
 		render(<MainWindow />)
 		await screen.findByText('About')
 		expect(screen.getByText('Quit')).toBeInTheDocument()
+	})
+
+	it('renders language switcher and calls setLocale when selection changes', async () => {
+		render(<MainWindow />)
+		await screen.findByRole('main')
+		const langSelect = screen.getByRole('combobox', { name: /language/i })
+		expect(langSelect).toBeInTheDocument()
+		expect(screen.getByText('English')).toBeInTheDocument()
+		fireEvent.change(langSelect, { target: { value: 'pt-BR' } })
+		expect(window.electron.setLocale).toHaveBeenCalledWith('pt-BR')
 	})
 })

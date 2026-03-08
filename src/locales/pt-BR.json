@@ -52,6 +52,7 @@
 	"language": {
 		"en": "English",
 		"pt-BR": "Português",
-		"es": "Español"
+		"es": "Español",
+		"label": "Idioma"
 	}
 }
