@@ -30,6 +30,8 @@ let activeNotesId: string[] = []
 
 const eventEmitter = new EventEmitter()
 
+let notificationScheduleJob: schedule.Job | null = null
+
 const preload = path.join(__dirname, 'preload.mjs')
 
 const saveNotes = () => {
@@ -76,15 +78,17 @@ const createMainWindow = () => {
 	})
 
 	mainWindow.on('closed', () => {
+		notificationScheduleJob?.cancel()
+		notificationScheduleJob = null
 		eventEmitter.removeAllListeners('windows-close')
 		app.quit()
 	})
 
-	// polling for notifications, every 10 seconds
-	schedule.scheduleJob('*/10 * * * * *', () => {
-		if (!mainWindow.isDestroyed()) {
-			mainWindow.webContents.send('check-notification-schedule', notesNotificationState)
-		}
+	// polling for notifications, every 10 seconds; only send when there are scheduled notifications
+	notificationScheduleJob = schedule.scheduleJob('*/10 * * * * *', () => {
+		if (mainWindow.isDestroyed()) return
+		if (Object.keys(notesNotificationState).length === 0) return
+		mainWindow.webContents.send('check-notification-schedule', notesNotificationState)
 	})
 }
 
