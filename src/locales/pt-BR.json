@@ -1,0 +1,54 @@
+{
+	"main": {
+		"soundLabel": "Som:",
+		"newNote": "Nova nota",
+		"closeAllNotes": "Fechar todas as notas",
+		"openAllNotes": "Abrir todas as notas",
+		"deleteAllNotes": "Excluir todas as notas",
+		"startupWithSystem": "Iniciar com o sistema",
+		"about": "Sobre",
+		"quit": "Sair"
+	},
+	"note": {
+		"loading": "Carregando nota...",
+		"addNote": "Adicionar nova nota",
+		"openMenu": "Abrir menu",
+		"deleteNote": "Excluir nota",
+		"closeNote": "Fechar janela da nota",
+		"placeholder": "Reunião às 8h..."
+	},
+	"about": {
+		"version": "Versão:",
+		"electronVersion": "Versão do Electron:",
+		"nodeVersion": "Versão do Node:",
+		"chromeVersion": "Versão do Chrome:",
+		"platformAndArch": "Plataforma e arquitetura:",
+		"developedBy": "Desenvolvido por:",
+		"loading": "Carregando..."
+	},
+	"schedule": {
+		"recurrence": "Recorrência",
+		"noRecurrence": "Sem recorrência",
+		"daily": "Diário",
+		"weekly": "Semanal",
+		"monthly": "Mensal",
+		"datePlaceholder": "data"
+	},
+	"sounds": {
+		"default": "Som padrão",
+		"chime": "Sino",
+		"achievement": "Sinos de conquista",
+		"relaxingBell": "Sino relaxante"
+	},
+	"system": {
+		"errorTitle": "Erro",
+		"createNoteError": "Não foi possível criar a nota.",
+		"noNotesToOpen": "Você não tem nenhuma nota para abrir!",
+		"alarmForNote": "Alarme da nota: {{content}}"
+	},
+	"language": {
+		"en": "English",
+		"pt-BR": "Português",
+		"es": "Español"
+	}
+}

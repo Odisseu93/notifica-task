@@ -1,0 +1,54 @@
+{
+	"main": {
+		"soundLabel": "Sound:",
+		"newNote": "New note",
+		"closeAllNotes": "Close all notes",
+		"openAllNotes": "Open all notes",
+		"deleteAllNotes": "Delete all notes",
+		"startupWithSystem": "Startup with system",
+		"about": "About",
+		"quit": "Quit"
+	},
+	"note": {
+		"loading": "Loading note...",
+		"addNote": "Add new note",
+		"openMenu": "Open menu",
+		"deleteNote": "Delete note",
+		"closeNote": "Close note window",
+		"placeholder": "Meeting at 8 am..."
+	},
+	"about": {
+		"version": "Version:",
+		"electronVersion": "Electron Version:",
+		"nodeVersion": "Node Version:",
+		"chromeVersion": "Chrome Version:",
+		"platformAndArch": "Platform and Architecture:",
+		"developedBy": "Developed by:",
+		"loading": "Loading..."
+	},
+	"schedule": {
+		"recurrence": "Recurrence",
+		"noRecurrence": "No recurrence",
+		"daily": "Daily",
+		"weekly": "Weekly",
+		"monthly": "Monthly",
+		"datePlaceholder": "date"
+	},
+	"sounds": {
+		"default": "Default sound",
+		"chime": "Chime",
+		"achievement": "Achievement bells",
+		"relaxingBell": "Relaxing bell"
+	},
+	"system": {
+		"errorTitle": "Error",
+		"createNoteError": "Could not create note.",
+		"noNotesToOpen": "You don't have any note to open!",
+		"alarmForNote": "Alarm for note: {{content}}"
+	},
+	"language": {
+		"en": "English",
+		"pt-BR": "Português",
+		"es": "Español"
+	}
+}
