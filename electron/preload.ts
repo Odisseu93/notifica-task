@@ -82,4 +82,14 @@ contextBridge.exposeInMainWorld('electron', {
 	getAutoStart: () => ipcRenderer.invoke('get-auto-launch'),
 
 	setAutoStart: (enabled: boolean) => ipcRenderer.invoke('set-auto-launch', enabled),
+
+	getLocale: () => ipcRenderer.invoke('get-locale'),
+
+	setLocale: (locale: string) => ipcRenderer.invoke('set-locale', locale),
+
+	onLocaleUpdated: (callback: (locale: string) => void) => {
+		const listener = (_: unknown, locale: string) => callback(locale)
+		ipcRenderer.on('locale-updated', listener)
+		return () => ipcRenderer.removeListener('locale-updated', listener)
+	},
 })

@@ -57,4 +57,24 @@ describe('API (IPC contract)', () => {
 		await api.openAllNotes()
 		expect(window.electron.openAllNotes).toHaveBeenCalled()
 	})
+
+	it('getLocale() calls electron and returns Promise<string>', async () => {
+		vi.mocked(window.electron.getLocale).mockResolvedValueOnce('pt-BR')
+		const result = await api.getLocale()
+		expect(window.electron.getLocale).toHaveBeenCalled()
+		expect(result).toBe('pt-BR')
+	})
+
+	it('setLocale(locale) calls electron with locale', async () => {
+		await api.setLocale('es')
+		expect(window.electron.setLocale).toHaveBeenCalledWith('es')
+	})
+
+	it('onLocaleUpdated(callback) returns unsubscribe and callback receives locale', () => {
+		const callback = vi.fn()
+		const unsubscribe = api.onLocaleUpdated(callback)
+		expect(typeof unsubscribe).toBe('function')
+		expect(window.electron.onLocaleUpdated).toHaveBeenCalledWith(callback)
+		unsubscribe()
+	})
 })

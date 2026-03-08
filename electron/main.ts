@@ -8,6 +8,7 @@ import { Note } from '../interfaces/note-interface'
 import { NoteNotification } from 'interfaces/note-notification-interface'
 import schedule from 'node-schedule'
 import store from './store'
+import type { LocaleCode } from './store'
 import { AlarmSoundKeyType } from '@/libs/app-notification'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
@@ -397,6 +398,31 @@ ipcMain.handle('set-auto-launch', (_, enable) => {
 	} catch (err) {
 		console.error('[main] set-auto-launch failed:', err)
 		return false
+	}
+})
+
+const VALID_LOCALES: LocaleCode[] = ['en', 'pt-BR', 'es']
+
+ipcMain.handle('get-locale', () => {
+	try {
+		return (store.get('locale') as LocaleCode | undefined) ?? 'en'
+	} catch (err) {
+		console.error('[main] get-locale failed:', err)
+		return 'en'
+	}
+})
+
+ipcMain.handle('set-locale', (_, locale: string) => {
+	const next = VALID_LOCALES.includes(locale as LocaleCode) ? (locale as LocaleCode) : 'en'
+	try {
+		store.set('locale', next)
+		if (!mainWindow.isDestroyed()) mainWindow.webContents.send('locale-updated', next)
+		windows.forEach((win) => {
+			if (!win.isDestroyed()) win.webContents.send('locale-updated', next)
+		})
+		if (aboutWindow && !aboutWindow.isDestroyed()) aboutWindow.webContents.send('locale-updated', next)
+	} catch (err) {
+		console.error('[main] set-locale failed:', err)
 	}
 })
 

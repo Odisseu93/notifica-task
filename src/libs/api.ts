@@ -37,6 +37,9 @@ declare global {
 			closeApp: () => Promise<void>
 			getAutoStart: () => Promise<boolean>
 			setAutoStart: (enabled: boolean) => Promise<boolean>
+			getLocale: () => Promise<string>
+			setLocale: (locale: string) => Promise<void>
+			onLocaleUpdated: (callback: (locale: string) => void) => () => void
 		}
 	}
 }
