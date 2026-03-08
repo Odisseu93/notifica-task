@@ -29,6 +29,27 @@ let notesState: Record<string, Note> = store.get('notes') || {}
 let notesNotificationState: Record<string, NoteNotification> = store.get('notesNotification') || {}
 let activeNotesId: string[] = []
 
+const systemMessages: Record<LocaleCode, { errorTitle: string; createNoteError: string; noNotesTitle: string; noNotesToOpen: string }> = {
+	en: {
+		errorTitle: 'Error',
+		createNoteError: 'Could not create note.',
+		noNotesTitle: 'Alert',
+		noNotesToOpen: "You don't have any note to open!",
+	},
+	'pt-BR': {
+		errorTitle: 'Erro',
+		createNoteError: 'Não foi possível criar a nota.',
+		noNotesTitle: 'Aviso',
+		noNotesToOpen: 'Você não tem nenhuma nota para abrir!',
+	},
+	es: {
+		errorTitle: 'Error',
+		createNoteError: 'No se pudo crear la nota.',
+		noNotesTitle: 'Aviso',
+		noNotesToOpen: '¡No tienes ninguna nota para abrir!',
+	},
+}
+
 const eventEmitter = new EventEmitter()
 
 let notificationScheduleJob: schedule.Job | null = null
@@ -219,7 +240,9 @@ ipcMain.on('create-new-note', () => {
 		createNoteWindow(newNote)
 	} catch (err) {
 		console.error('[main] create-new-note failed:', err)
-		new Notification({ title: 'Error', body: 'Could not create note.' }).show()
+		const locale = (store.get('locale') as LocaleCode | undefined) ?? 'en'
+		const msg = systemMessages[locale]
+		new Notification({ title: msg.errorTitle, body: msg.createNoteError }).show()
 	}
 })
 
@@ -304,9 +327,11 @@ ipcMain.handle('delete-all-notes', () => {
 
 ipcMain.handle('open-all-notes', () => {
 	if (Object.keys(notesState).length === 0) {
+		const locale = (store.get('locale') as LocaleCode | undefined) ?? 'en'
+		const msg = systemMessages[locale]
 		new Notification({
-			title: 'alert',
-			body: "You don't have any note to open!",
+			title: msg.noNotesTitle,
+			body: msg.noNotesToOpen,
 		}).show()
 		return
 	}
