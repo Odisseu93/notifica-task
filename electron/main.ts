@@ -23,7 +23,7 @@ process.env.VITE_PUBLIC = VITE_DEV_SERVER_URL ? path.join(process.env.APP_ROOT, 
 const isDev = !!VITE_DEV_SERVER_URL
 let windows: BrowserWindow[] = []
 let mainWindow: BrowserWindow
-let aboutWindow: BrowserWindow
+let aboutWindow: BrowserWindow | undefined
 let notesState: Record<string, Note> = store.get('notes') || {}
 let notesNotificationState: Record<string, NoteNotification> = store.get('notesNotification') || {}
 let activeNotesId: string[] = []
@@ -295,7 +295,9 @@ ipcMain.handle('open-all-notes', () => {
 ipcMain.handle('open-about-window', createAboutWindow)
 
 ipcMain.handle('close-about-window', () => {
-	aboutWindow.close()
+	if (aboutWindow && !aboutWindow.isDestroyed()) {
+		aboutWindow.close()
+	}
 })
 
 ipcMain.handle('close-app', () => {
