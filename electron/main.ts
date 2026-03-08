@@ -1,5 +1,5 @@
 import EventEmitter from 'node:events'
-import { fileURLToPath } from 'node:url'
+import { fileURLToPath, pathToFileURL } from 'node:url'
 import path from 'node:path'
 
 import { app, BrowserWindow, ipcMain, Notification, Tray } from 'electron'
@@ -119,7 +119,7 @@ const createAboutWindow = () => {
 		aboutWindow.loadURL(`${VITE_DEV_SERVER_URL}#about`)
 	} else {
 		const indexPath = path.join(__dirname, '../dist/index.html')
-		aboutWindow.loadURL(`file://${indexPath}#about`)
+		aboutWindow.loadURL(`${pathToFileURL(indexPath).toString()}#about`)
 	}
 }
 
@@ -141,9 +141,8 @@ const createNoteWindow = (note: Note) => {
 	if (isDev) {
 		win.loadURL(`${VITE_DEV_SERVER_URL}#note?noteId=${note.id}`)
 	} else {
-		// win.loadFile(path.join(__dirname, '../dist/index.html'))
 		const indexPath = path.join(__dirname, '../dist/index.html')
-		win.loadURL(`file://${indexPath}#note?noteId=${note.id}`)
+		win.loadURL(`${pathToFileURL(indexPath).toString()}#note?noteId=${note.id}`)
 	}
 
 	windows.push(win)
