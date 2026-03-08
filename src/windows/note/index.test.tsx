@@ -1,4 +1,7 @@
+/// <reference types="@testing-library/jest-dom/vitest" />
+import React from 'react'
 import { describe, it, expect, beforeEach, vi } from 'vitest'
+import type {} from '../../libs/api'
 import { render, screen } from '@testing-library/react'
 import NoteWindow from './index'
 
