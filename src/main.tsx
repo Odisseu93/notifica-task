@@ -7,7 +7,7 @@ import { useState, useEffect } from 'react'
 import { api } from '@/libs/api'
 import i18n from './i18n'
 
-const Root = () => {
+export const Root = () => {
 	const [localeReady, setLocaleReady] = useState(false)
 
 	useEffect(() => {

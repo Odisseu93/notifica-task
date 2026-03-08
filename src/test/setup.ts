@@ -39,7 +39,7 @@ const electronMock = {
 	setAutoStart: vi.fn(() => Promise.resolve(true)),
 	getLocale: vi.fn(() => Promise.resolve('en')),
 	setLocale: vi.fn(() => Promise.resolve()),
-	onLocaleUpdated: vi.fn((callback: (locale: string) => void) => {
+	onLocaleUpdated: vi.fn(() => {
 		const unsubscribe = vi.fn()
 		return unsubscribe
 	}),
