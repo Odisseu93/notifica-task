@@ -2,12 +2,13 @@ import EventEmitter from 'node:events'
 import { fileURLToPath, pathToFileURL } from 'node:url'
 import path from 'node:path'
 
-import { app, BrowserWindow, ipcMain, Notification, Tray } from 'electron'
+import { app, BrowserWindow, ipcMain, Notification, screen, Tray } from 'electron'
 
 import { Note } from '../interfaces/note-interface'
 import { NoteNotification } from 'interfaces/note-notification-interface'
 import schedule from 'node-schedule'
 import store from './store'
+import type { LocaleCode } from './store'
 import { AlarmSoundKeyType } from '@/libs/app-notification'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
@@ -27,6 +28,27 @@ let aboutWindow: BrowserWindow | undefined
 let notesState: Record<string, Note> = store.get('notes') || {}
 let notesNotificationState: Record<string, NoteNotification> = store.get('notesNotification') || {}
 let activeNotesId: string[] = []
+
+const systemMessages: Record<LocaleCode, { errorTitle: string; createNoteError: string; noNotesTitle: string; noNotesToOpen: string }> = {
+	en: {
+		errorTitle: 'Error',
+		createNoteError: 'Could not create note.',
+		noNotesTitle: 'Alert',
+		noNotesToOpen: "You don't have any note to open!",
+	},
+	'pt-BR': {
+		errorTitle: 'Erro',
+		createNoteError: 'Não foi possível criar a nota.',
+		noNotesTitle: 'Aviso',
+		noNotesToOpen: 'Você não tem nenhuma nota para abrir!',
+	},
+	es: {
+		errorTitle: 'Error',
+		createNoteError: 'No se pudo crear la nota.',
+		noNotesTitle: 'Aviso',
+		noNotesToOpen: '¡No tienes ninguna nota para abrir!',
+	},
+}
 
 const eventEmitter = new EventEmitter()
 
@@ -50,16 +72,25 @@ const saveNotesNotification = () => {
 	}
 }
 
+const MAIN_MENU_WIDTH = 320
+const MAIN_MENU_HEIGHT = 540
+
 const createMainWindow = () => {
 	const tray = new Tray(path.join(process.env.VITE_PUBLIC, 'icon.png'))
 	const trayBounds = tray.getBounds()
+	const display = screen.getDisplayNearestPoint({ x: trayBounds.x, y: trayBounds.y })
+	const workArea = display.workArea
+	const winHeight = Math.min(MAIN_MENU_HEIGHT, workArea.height)
+	const winWidth = Math.min(MAIN_MENU_WIDTH, workArea.width)
+	const x = Math.max(workArea.x, Math.min(trayBounds.x, workArea.x + workArea.width - winWidth))
+	const y = Math.max(workArea.y, Math.min(trayBounds.y - winHeight, workArea.y + workArea.height - winHeight))
 
 	mainWindow = new BrowserWindow({
 		icon: path.join(process.env.VITE_PUBLIC, 'icon.png'),
-		width: 225,
-		height: 520,
-		y: trayBounds.y + -520,
-		x: trayBounds.x,
+		width: winWidth,
+		height: winHeight,
+		x,
+		y,
 		resizable: false,
 		alwaysOnTop: true,
 		movable: false,
@@ -218,7 +249,9 @@ ipcMain.on('create-new-note', () => {
 		createNoteWindow(newNote)
 	} catch (err) {
 		console.error('[main] create-new-note failed:', err)
-		new Notification({ title: 'Error', body: 'Could not create note.' }).show()
+		const locale = (store.get('locale') as LocaleCode | undefined) ?? 'en'
+		const msg = systemMessages[locale]
+		new Notification({ title: msg.errorTitle, body: msg.createNoteError }).show()
 	}
 })
 
@@ -303,9 +336,11 @@ ipcMain.handle('delete-all-notes', () => {
 
 ipcMain.handle('open-all-notes', () => {
 	if (Object.keys(notesState).length === 0) {
+		const locale = (store.get('locale') as LocaleCode | undefined) ?? 'en'
+		const msg = systemMessages[locale]
 		new Notification({
-			title: 'alert',
-			body: "You don't have any note to open!",
+			title: msg.noNotesTitle,
+			body: msg.noNotesToOpen,
 		}).show()
 		return
 	}
@@ -397,6 +432,31 @@ ipcMain.handle('set-auto-launch', (_, enable) => {
 	} catch (err) {
 		console.error('[main] set-auto-launch failed:', err)
 		return false
+	}
+})
+
+const VALID_LOCALES: LocaleCode[] = ['en', 'pt-BR', 'es']
+
+ipcMain.handle('get-locale', () => {
+	try {
+		return (store.get('locale') as LocaleCode | undefined) ?? 'en'
+	} catch (err) {
+		console.error('[main] get-locale failed:', err)
+		return 'en'
+	}
+})
+
+ipcMain.handle('set-locale', (_, locale: string) => {
+	const next = VALID_LOCALES.includes(locale as LocaleCode) ? (locale as LocaleCode) : 'en'
+	try {
+		store.set('locale', next)
+		if (!mainWindow.isDestroyed()) mainWindow.webContents.send('locale-updated', next)
+		windows.forEach((win) => {
+			if (!win.isDestroyed()) win.webContents.send('locale-updated', next)
+		})
+		if (aboutWindow && !aboutWindow.isDestroyed()) aboutWindow.webContents.send('locale-updated', next)
+	} catch (err) {
+		console.error('[main] set-locale failed:', err)
 	}
 })
 

@@ -1,5 +1,18 @@
 # Changelog
 
+## [1.2.0] – 2025-03-08
+
+### Added
+- feat(i18n): language switcher with English (default), pt-BR and Spanish
+- feat(store,main,preload): locale persistence and IPC get/set/onLocaleUpdated
+- feat(main): translate system notification messages (create note error, no notes to open) by locale
+- feat(ui): language selector in Main window; all UI strings use react-i18next
+
+### Chore & Tests
+- test(api): getLocale, setLocale, onLocaleUpdated IPC tests
+- test(main): language switcher combobox and setLocale on change
+- test(i18n): fix lint in test setup and main entry
+
 ## [1.1.0] – 2025-03-08
 
 ### Fixes
@@ -27,3 +40,4 @@
 - chore(deps): bump electron-builder to ^26.8.1
 
 [1.1.0]: https://github.com/Odisseu93/notifica-task/compare/v1.0.0...v1.1.0
+[1.2.0]: https://github.com/Odisseu93/notifica-task/compare/v1.1.0...v1.2.0

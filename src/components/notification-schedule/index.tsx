@@ -1,4 +1,5 @@
 import { ChangeEvent, useLayoutEffect, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 
 import { NoteNotification } from '../../../interfaces/note-notification-interface'
 import { api } from '../../libs/api'
@@ -7,6 +8,7 @@ import { now, formatDateTimeLocal } from '@/utils/date'
 const noteNotificationInitialState = {} as NoteNotification
 
 const NotificationSchedule = ({ noteId }: { noteId: string }) => {
+	const { t } = useTranslation('schedule')
 	const [noteNotification, setNoteNotification] = useState<NoteNotification>(noteNotificationInitialState)
 	const handleUpdateRecurrence = (e: ChangeEvent<HTMLSelectElement>) => {
 		const recurrence = e.target.value as NoteNotification['recurrence']
@@ -71,22 +73,22 @@ const NotificationSchedule = ({ noteId }: { noteId: string }) => {
 	return (
 		<>
 			<select
-				title='recurrence'
-				aria-label='Recurrence'
+				title={t('recurrence')}
+				aria-label={t('recurrence')}
 				className='recurrence-select'
 				value={noteNotification?.recurrence ?? ''}
 				onInput={handleUpdateRecurrence}
 			>
-				<option value=''>No recurrence</option>
-				<option value='daily'>Daily</option>
-				<option value='weekly'>Weekly</option>
-				<option value='monthly'>Monthly</option>
+				<option value=''>{t('noRecurrence')}</option>
+				<option value='daily'>{t('daily')}</option>
+				<option value='weekly'>{t('weekly')}</option>
+				<option value='monthly'>{t('monthly')}</option>
 			</select>
 
 			<input
-				placeholder='date'
+				placeholder={t('datePlaceholder')}
 				type='datetime-local'
-				aria-label='Schedule date and time'
+				aria-label={t('scheduleDateLabel')}
 				value={noteNotification.scheduleDate ? formatDateTimeLocal(noteNotification.scheduleDate) : ''}
 				onChange={handleUpdateScheduleDate}
 			/>

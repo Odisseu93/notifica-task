@@ -7,7 +7,7 @@ import NotificationSchedule from './index'
 describe('NotificationSchedule', () => {
 	it('renders recurrence select and date input', async () => {
 		render(<NotificationSchedule noteId='test-note-id' />)
-		await screen.findByTitle('recurrence')
+		await screen.findByTitle('Recurrence')
 		expect(screen.getByPlaceholderText('date')).toBeInTheDocument()
 	})
 

@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { useTranslation } from 'react-i18next'
 import './styles.css'
 
 import NotificationSchedule from '@/components/notification-schedule'
@@ -9,6 +10,7 @@ import { api } from '@/libs/api'
 import { Note } from 'interfaces/note-interface'
 
 const NoteWindow = () => {
+	const { t } = useTranslation('note')
 	const [note, setNote] = useState<Note | null>(null)
 	const [isMenuEnabled, setIsMenuEnabled] = useState(false)
 	const hash = window.location.hash // "#note?noteId=123"
@@ -81,27 +83,27 @@ const NoteWindow = () => {
 		}
 	}, [])
 
-	if (!note) return <div>Loading note...</div>
+	if (!note) return <div>{t('loading')}</div>
 
 	return (
 		<article className='card' id={note.id}>
 			<header>
-				<button type='button' title='add note' aria-label='Add new note' onClick={handleCreate}>
+				<button type='button' title={t('addNote')} aria-label={t('addNote')} onClick={handleCreate}>
 					<Plus color='#FFFFFF' />
 				</button>
 				<div className='close-and-ellipse-button'>
-					<button type='button' title='menu' aria-label='Open menu' onClick={handleToggleMenu}>
+					<button type='button' title={t('openMenu')} aria-label={t('openMenu')} onClick={handleToggleMenu}>
 						<Ellipsis color='#FFFFFF' />
 					</button>
 					<ul className={`menu menu--${isMenuEnabled ? 'enabled' : 'disabled'}`}>
 						<li>
-							<button title='delete' type='button' className='text-[tomato]' aria-label='Delete note' onClick={handleDelete}>
+							<button title={t('deleteNote')} type='button' className='text-[tomato]' aria-label={t('deleteNote')} onClick={handleDelete}>
 								<Trash2 color='#141414' />
-								<span className='button-text'>Delete note</span>
+								<span className='button-text'>{t('deleteNote')}</span>
 							</button>
 						</li>
 					</ul>
-					<button type='button' title='close' aria-label='Close note window' onClick={handleClose}>
+					<button type='button' title={t('closeNote')} aria-label={t('closeNote')} onClick={handleClose}>
 						<X color='#FFFFFF' />
 					</button>
 				</div>
@@ -109,7 +111,7 @@ const NoteWindow = () => {
 			<textarea
 				rows={10}
 				cols={40}
-				placeholder='Meeting at 8 am...'
+				placeholder={t('placeholder')}
 				value={note.content}
 				onChange={handleContentChange}
 			/>

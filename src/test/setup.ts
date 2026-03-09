@@ -1,5 +1,6 @@
 import '@testing-library/jest-dom/vitest'
 import { vi } from 'vitest'
+import '../i18n'
 
 const electronMock = {
 	getInitialState: vi.fn(() => Promise.resolve(undefined)),
@@ -36,6 +37,12 @@ const electronMock = {
 	),
 	getAutoStart: vi.fn(() => Promise.resolve(false)),
 	setAutoStart: vi.fn(() => Promise.resolve(true)),
+	getLocale: vi.fn(() => Promise.resolve('en')),
+	setLocale: vi.fn(() => Promise.resolve()),
+	onLocaleUpdated: vi.fn(() => {
+		const unsubscribe = vi.fn()
+		return unsubscribe
+	}),
 }
 
 const win = globalThis.window as Window & {

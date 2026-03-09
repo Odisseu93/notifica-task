@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import './styles.css'
 
 import { api } from '@/libs/api'
@@ -8,9 +9,14 @@ import { now, getNextRecurrenceDate } from '@/utils/date'
 import CustomSelect from '../../components/custom-select'
 import MainWindowButton from '@/components/main-window-button'
 import { X } from 'lucide-react'
+import i18n from '@/i18n'
 
 const MainWindow = () => {
-	const soundList = Object.entries(AlarmSounds).map(([key, sound]) => ({ key, value: sound.name }))
+	const { t } = useTranslation('main')
+	const { t: tSounds } = useTranslation('sounds')
+	const { t: tSystem } = useTranslation('system')
+	const { t: tLanguage } = useTranslation('language')
+	const soundList = Object.entries(AlarmSounds).map(([key]) => ({ key, value: tSounds(key) }))
 	const [defaultSoundValue, setDefaultSoundValue] = useState('')
 	const [autoStart, setAutoStart] = useState(false)
 
@@ -56,7 +62,7 @@ const MainWindow = () => {
 								new AppNotification({
 									title: '',
 									requireInteraction: true,
-									body: `🔔 Alarm for note: ${note.content.substring(0, 50)}...`,
+									body: `🔔 ${tSystem('alarmForNote', { content: note.content.substring(0, 50) })}...`,
 									soundKey,
 									loop: true,
 								})
@@ -97,12 +103,13 @@ const MainWindow = () => {
 	return (
 		<main className='container'>
 			<header className='header'>
-				<button type='button' title='close' aria-label='Close main window' onClick={api.hideMainWindow}>
+				<button type='button' title={t('closeWindow')} aria-label={t('closeWindow')} onClick={api.hideMainWindow}>
 					<X color='#FFFFFF' />
 				</button>
 			</header>
-			<CustomSelect
-				label='Sound:'
+			<div className='menu-content' data-testid='menu-content'>
+				<CustomSelect
+				label={t('soundLabel')}
 				list={soundList}
 				defaultValue={defaultSoundValue}
 				key={defaultSoundValue}
@@ -110,21 +117,38 @@ const MainWindow = () => {
 					api.setNotificationSound(value)
 				}}
 			/>
-			<MainWindowButton onClick={api.createNewNote} content='New note' />
-			<MainWindowButton onClick={api.closeAllNotes} content='Close all notes' />
-			<MainWindowButton onClick={api.openAllNotes} content='Open all notes' />
-			<MainWindowButton className='text-[tomato]' onClick={api.deleteAllNotes} content='Delete all notes' />
+			<MainWindowButton onClick={api.createNewNote} content={t('newNote')} />
+			<MainWindowButton onClick={api.closeAllNotes} content={t('closeAllNotes')} />
+			<MainWindowButton onClick={api.openAllNotes} content={t('openAllNotes')} />
+			<MainWindowButton className='text-[tomato]' onClick={api.deleteAllNotes} content={t('deleteAllNotes')} />
 
 			<div className='start-up-with-system-container'>
 				<input type='checkbox' id='autoStart' checked={autoStart} onChange={handleToggleAutoStart} />
-				<label htmlFor='autoStart'>Startup with system</label>
+				<label htmlFor='autoStart'>{t('startupWithSystem')}</label>
+			</div>
+			<div className='language-switcher-container'>
+				<label htmlFor='locale' className='language-label'>
+					{tLanguage('label')}
+				</label>
+				<select
+					id='locale'
+					role='combobox'
+					aria-label={tLanguage('label')}
+					value={i18n.language}
+					onChange={(e) => api.setLocale(e.target.value)}
+				>
+					<option value='en'>{tLanguage('en')}</option>
+					<option value='pt-BR'>{tLanguage('pt-BR')}</option>
+					<option value='es'>{tLanguage('es')}</option>
+				</select>
 			</div>
 			<button className='about-button' onClick={api.openAboutWindow}>
-				About
+				{t('about')}
 			</button>
 			<button className='quit-button' onClick={api.closeApp}>
-				Quit
+				{t('quit')}
 			</button>
+			</div>
 		</main>
 	)
 }

@@ -7,7 +7,7 @@
 }
 
 .selected {
-  @apply bg-white flex justify-between w-[185px] px-4 py-2 border border-black rounded-md;
+  @apply bg-white flex justify-between w-full min-w-0 max-w-full px-4 py-2 border border-black rounded-md;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -26,7 +26,7 @@
 }
 
 .list--unfolded {
-  @apply absolute w-[185px] mt-[-5px] px-4 py-2 border border-t-0 border-black rounded-b-md;
+  @apply absolute w-full min-w-0 max-w-full mt-[-5px] px-4 py-2 border border-t-0 border-black rounded-b-md box-border;
   z-index: 1;
 }
 

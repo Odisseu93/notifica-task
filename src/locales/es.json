@@ -1,0 +1,58 @@
+{
+	"main": {
+		"soundLabel": "Sonido:",
+		"newNote": "Nueva nota",
+		"closeAllNotes": "Cerrar todas las notas",
+		"openAllNotes": "Abrir todas las notas",
+		"deleteAllNotes": "Eliminar todas las notas",
+		"startupWithSystem": "Iniciar con el sistema",
+		"about": "Acerca de",
+		"quit": "Salir",
+		"closeWindow": "Cerrar ventana principal"
+	},
+	"note": {
+		"loading": "Cargando nota...",
+		"addNote": "Añadir nueva nota",
+		"openMenu": "Abrir menú",
+		"deleteNote": "Eliminar nota",
+		"closeNote": "Cerrar ventana de nota",
+		"placeholder": "Reunión a las 8..."
+	},
+	"about": {
+		"version": "Versión:",
+		"electronVersion": "Versión de Electron:",
+		"nodeVersion": "Versión de Node:",
+		"chromeVersion": "Versión de Chrome:",
+		"platformAndArch": "Plataforma y arquitectura:",
+		"developedBy": "Desarrollado por:",
+		"loading": "Cargando...",
+		"closeWindow": "Cerrar ventana Acerca de"
+	},
+	"schedule": {
+		"recurrence": "Recurrencia",
+		"noRecurrence": "Sin recurrencia",
+		"daily": "Diario",
+		"weekly": "Semanal",
+		"monthly": "Mensual",
+		"datePlaceholder": "fecha",
+		"scheduleDateLabel": "Fecha y hora del recordatorio"
+	},
+	"sounds": {
+		"default": "Sonido predeterminado",
+		"chime": "Campana",
+		"achievement": "Campanas de logro",
+		"relaxingBell": "Campana relajante"
+	},
+	"system": {
+		"errorTitle": "Error",
+		"createNoteError": "No se pudo crear la nota.",
+		"noNotesToOpen": "¡No tienes ninguna nota para abrir!",
+		"alarmForNote": "Alarma de nota: {{content}}"
+	},
+	"language": {
+		"en": "English",
+		"pt-BR": "Português",
+		"es": "Español",
+		"label": "Idioma"
+	}
+}
