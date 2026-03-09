@@ -41,5 +41,5 @@ You can download the latest version of Notifica Task for your platform (from [Re
 | ---------- | ---------------------------------------------------------------------------------- |
 | 🪟 Windows (1.2.0) | [Download](https://github.com/Odisseu93/notifica-task/releases/download/v1.2.0/Notifica.Task-Windows-1.2.0-Setup.exe) |
 | 🪟 Windows (1.1.0) | [Download](https://github.com/Odisseu93/notifica-task/releases/download/v1.1.0/Notifica.Task-Windows-1.1.0-Setup.exe) |
-| 🪟 Windows (1.0.0) | [Download](https://github.com/Odisseu93/notifica-task/releases/download/v1.0/Notifica%20Task-Windows-1.0.0-Setup.exe) |
+| 🪟 Windows (1.0.0) | [Download](https://github.com/Odisseu93/notifica-task/releases/download/v1.0/Notifica.Task-Windows-1.0.0-Setup.exe) |
 
