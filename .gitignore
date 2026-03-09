@@ -17,6 +17,9 @@ dist-electron
 # Local plan progress (do not commit)
 .plan-progress.md
 
+# Installers (hosted on GitHub Releases only)
+download/*.exe
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
