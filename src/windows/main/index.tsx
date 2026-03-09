@@ -103,11 +103,12 @@ const MainWindow = () => {
 	return (
 		<main className='container'>
 			<header className='header'>
-				<button type='button' title='close' aria-label={t('closeWindow')} onClick={api.hideMainWindow}>
+				<button type='button' title={t('closeWindow')} aria-label={t('closeWindow')} onClick={api.hideMainWindow}>
 					<X color='#FFFFFF' />
 				</button>
 			</header>
-			<CustomSelect
+			<div className='menu-content' data-testid='menu-content'>
+				<CustomSelect
 				label={t('soundLabel')}
 				list={soundList}
 				defaultValue={defaultSoundValue}
@@ -147,6 +148,7 @@ const MainWindow = () => {
 			<button className='quit-button' onClick={api.closeApp}>
 				{t('quit')}
 			</button>
+			</div>
 		</main>
 	)
 }

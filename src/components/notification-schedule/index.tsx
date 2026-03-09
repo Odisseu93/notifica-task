@@ -73,7 +73,7 @@ const NotificationSchedule = ({ noteId }: { noteId: string }) => {
 	return (
 		<>
 			<select
-				title='recurrence'
+				title={t('recurrence')}
 				aria-label={t('recurrence')}
 				className='recurrence-select'
 				value={noteNotification?.recurrence ?? ''}

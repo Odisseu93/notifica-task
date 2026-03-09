@@ -39,3 +39,10 @@
 
   @apply text-gray-700 text-base;
 }
+
+html,
+body,
+#root {
+  height: 100%;
+  margin: 0;
+}

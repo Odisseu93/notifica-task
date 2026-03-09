@@ -17,7 +17,7 @@ const AboutWindow = () => {
 			{info ? (
 				<main className='about-container'>
 					<header className='top-bar'>
-						<button type='button' title='close' aria-label={t('closeWindow')} onClick={api.closeAboutWindow}>
+						<button type='button' title={t('closeWindow')} aria-label={t('closeWindow')} onClick={api.closeAboutWindow}>
 							<X color='#FFFFFF' />
 						</button>
 					</header>

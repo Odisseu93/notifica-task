@@ -2,7 +2,7 @@ import EventEmitter from 'node:events'
 import { fileURLToPath, pathToFileURL } from 'node:url'
 import path from 'node:path'
 
-import { app, BrowserWindow, ipcMain, Notification, Tray } from 'electron'
+import { app, BrowserWindow, ipcMain, Notification, screen, Tray } from 'electron'
 
 import { Note } from '../interfaces/note-interface'
 import { NoteNotification } from 'interfaces/note-notification-interface'
@@ -72,16 +72,25 @@ const saveNotesNotification = () => {
 	}
 }
 
+const MAIN_MENU_WIDTH = 320
+const MAIN_MENU_HEIGHT = 540
+
 const createMainWindow = () => {
 	const tray = new Tray(path.join(process.env.VITE_PUBLIC, 'icon.png'))
 	const trayBounds = tray.getBounds()
+	const display = screen.getDisplayNearestPoint({ x: trayBounds.x, y: trayBounds.y })
+	const workArea = display.workArea
+	const winHeight = Math.min(MAIN_MENU_HEIGHT, workArea.height)
+	const winWidth = Math.min(MAIN_MENU_WIDTH, workArea.width)
+	const x = Math.max(workArea.x, Math.min(trayBounds.x, workArea.x + workArea.width - winWidth))
+	const y = Math.max(workArea.y, Math.min(trayBounds.y - winHeight, workArea.y + workArea.height - winHeight))
 
 	mainWindow = new BrowserWindow({
 		icon: path.join(process.env.VITE_PUBLIC, 'icon.png'),
-		width: 225,
-		height: 520,
-		y: trayBounds.y + -520,
-		x: trayBounds.x,
+		width: winWidth,
+		height: winHeight,
+		x,
+		y,
 		resizable: false,
 		alwaysOnTop: true,
 		movable: false,

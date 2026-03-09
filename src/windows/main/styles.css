@@ -2,13 +2,18 @@
 @import "tw-animate-css";
 
 .container {
-  @apply flex flex-col gap-4 px-4 py-16;
+  @apply flex flex-col h-full min-h-0;
 }
 
-.container>header {
+.container > header {
   background-color: var(--color-black-1);
-  @apply absolute left-0 top-0 h-[32px] w-full flex justify-end items-center p-2;
+  @apply flex-shrink-0 left-0 top-0 h-[32px] w-full flex justify-end items-center p-2;
   -webkit-app-region: drag;
+}
+
+.container .menu-content {
+  @apply flex flex-col gap-4 px-4 py-4 overflow-y-auto flex-1 min-h-0;
+  max-width: 280px;
 }
 
 button {
@@ -16,7 +21,7 @@ button {
 }
 
 .start-up-with-system-container {
-  @apply flex items-center gap-2;
+  @apply flex items-center gap-2 max-w-[280px];
 }
 
 .start-up-with-system-container>input {
@@ -25,5 +30,14 @@ button {
 
 .about-button,
 .quit-button {
-  @apply bg-transparent w-max m-0 p-0 border-none active:scale-95;
+  @apply bg-transparent w-full m-0 p-0 border-none active:scale-95 text-left block;
+}
+
+.language-switcher-container {
+  @apply flex flex-col gap-1;
+}
+.language-switcher-container select {
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
 }

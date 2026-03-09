@@ -88,22 +88,22 @@ const NoteWindow = () => {
 	return (
 		<article className='card' id={note.id}>
 			<header>
-				<button type='button' title='add note' aria-label={t('addNote')} onClick={handleCreate}>
+				<button type='button' title={t('addNote')} aria-label={t('addNote')} onClick={handleCreate}>
 					<Plus color='#FFFFFF' />
 				</button>
 				<div className='close-and-ellipse-button'>
-					<button type='button' title='menu' aria-label={t('openMenu')} onClick={handleToggleMenu}>
+					<button type='button' title={t('openMenu')} aria-label={t('openMenu')} onClick={handleToggleMenu}>
 						<Ellipsis color='#FFFFFF' />
 					</button>
 					<ul className={`menu menu--${isMenuEnabled ? 'enabled' : 'disabled'}`}>
 						<li>
-							<button title='delete' type='button' className='text-[tomato]' aria-label={t('deleteNote')} onClick={handleDelete}>
+							<button title={t('deleteNote')} type='button' className='text-[tomato]' aria-label={t('deleteNote')} onClick={handleDelete}>
 								<Trash2 color='#141414' />
 								<span className='button-text'>{t('deleteNote')}</span>
 							</button>
 						</li>
 					</ul>
-					<button type='button' title='close' aria-label={t('closeNote')} onClick={handleClose}>
+					<button type='button' title={t('closeNote')} aria-label={t('closeNote')} onClick={handleClose}>
 						<X color='#FFFFFF' />
 					</button>
 				</div>
